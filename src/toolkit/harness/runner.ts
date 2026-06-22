@@ -8,7 +8,7 @@ import type {
   SpecResult,
   StepResult,
 } from "./types.js";
-import { getInMemoryClient } from "../../store/redis.js";
+import { getInMemoryClient, clearInMemoryClient } from "../../store/redis.js";
 
 async function runSetup(spec: BotSpec): Promise<void> {
   const setup = spec.setup;
@@ -167,6 +167,7 @@ export async function runSpec(bot: Bot<any>, spec: BotSpec): Promise<SpecResult>
   };
   bot.api.config.use(capture);
 
+  clearInMemoryClient();
   await runSetup(spec);
 
   // grammY's handleUpdate RETHROWS handler errors (bot.catch only guards the

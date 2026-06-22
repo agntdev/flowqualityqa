@@ -10,7 +10,10 @@ composer.on("poll", async (ctx, next) => {
   const poll = ctx.update.poll;
   if (!poll || !poll.id) return;
 
-  if (!poll.options || poll.options.length === 0) return;
+  if (!poll.options || poll.options.length === 0) {
+    await next();
+    return;
+  }
 
   for (let i = 0; i < poll.options.length; i++) {
     const pollOption = poll.options[i];

@@ -127,4 +127,9 @@ export class InMemoryRedis implements RedisLike {
 
     return chain;
   }
+
+  clear(): void {
+    this.data.clear();
+    this.sets.clear();
+  }
 }

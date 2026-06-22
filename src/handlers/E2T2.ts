@@ -119,11 +119,12 @@ composer.on("callback_query:data", async (ctx, next) => {
   }
 });
 
-composer.on("poll_answer", async (ctx) => {
+composer.on("poll_answer", async (ctx, next) => {
   const answer = ctx.pollAnswer;
   if (!answer?.poll_id) return;
 
   await tryEditPollMessage(ctx, answer.poll_id);
+  await next();
 });
 
 export default composer;
