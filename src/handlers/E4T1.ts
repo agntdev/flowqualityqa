@@ -69,13 +69,15 @@ composer.command("poll", async (ctx) => {
   );
 });
 
-composer.on("poll", async (ctx) => {
+composer.on("poll", async (ctx, next) => {
   const pollUpdate = ctx.update.poll;
-  if (!pollUpdate || !pollUpdate.id) return;
+  if (!pollUpdate || !pollUpdate.id) return next();
 
   if (pollUpdate.is_closed) {
     await store.close(pollUpdate.id, new Date().toISOString());
   }
+
+  await next();
 });
 
 export default composer;

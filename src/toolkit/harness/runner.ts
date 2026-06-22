@@ -11,11 +11,13 @@ import type {
 import { getInMemoryClient } from "../../store/redis.js";
 
 async function runSetup(spec: BotSpec): Promise<void> {
+  const client = getInMemoryClient();
+  client.clear();
+
   const setup = spec.setup;
   if (!setup) return;
 
   try {
-    const client = getInMemoryClient();
     console.log("[runSetup] got client, kv entries:", setup.kv?.length ?? 0, "set entries:", setup.sets?.length ?? 0);
 
     if (setup.kv) {
@@ -132,6 +134,24 @@ function settle(): Promise<void> {
 /** A plausible deterministic stub for an outgoing call so handlers can chain
  *  (e.g. reply() → editMessageText(returnedMessageId)). */
 function stubResult(method: string, payload: Record<string, unknown>, msgId: number): unknown {
+  if (method === "sendPoll") {
+    const chatId = (payload.chat_id as number) ?? 1;
+    return {
+      message_id: msgId,
+      date: 0,
+      chat: { id: chatId, type: "private" },
+      poll: {
+        id: `poll_${chatId}_${msgId}`,
+        question: payload.question ?? "",
+        options: (payload.options as Array<unknown>) ?? [],
+        total_voter_count: 0,
+        is_closed: false,
+        is_anonymous: (payload.is_anonymous as boolean) ?? true,
+        type: "regular",
+        allows_multiple_answers: false,
+      },
+    };
+  }
   if (/^(send|edit|copy|forward)/.test(method)) {
     return {
       message_id: msgId,

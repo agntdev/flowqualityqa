@@ -55,6 +55,11 @@ export class InMemoryRedis implements RedisLike {
     return [...this.data.keys()].filter((k) => re.test(k));
   }
 
+  clear(): void {
+    this.data.clear();
+    this.sets.clear();
+  }
+
   multi(): RedisMulti {
     const cmds: Array<{
       op: string;

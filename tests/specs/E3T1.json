@@ -287,7 +287,15 @@
       {
         "send": { "callback": "poll:results:poll_1_1014", "messageId": 1003 },
         "expect": [
-          { "method": "answerCallbackQuery", "payload": { "text": "Poll not found.", "show_alert": true } }
+          { "method": "answerCallbackQuery" },
+          {
+            "method": "editMessageText",
+            "payload": {
+              "text": "<b>📊 Results</b>\n\n<b>Question:</b> Q?\n\nA: 0 votes (0%)\n<code></code>\nB: 0 votes (0%)\n<code></code>\n\nTotal votes: 0",
+              "parse_mode": "HTML",
+              "reply_markup": { "inline_keyboard": [] }
+            }
+          }
         ]
       }
     ]
