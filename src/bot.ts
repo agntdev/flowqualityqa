@@ -42,10 +42,12 @@ export async function buildBot(token: string) {
     files = []; // no handlers/ dir yet → nothing to load
   }
   for (const file of files.sort()) {
+    console.error("buildBot: loading handler", file);
     const mod = (await import(new URL(file, dir).href)) as { default?: Composer<Ctx> };
     if (!mod.default) {
       throw new Error(`handler ${file} must default-export a grammY Composer`);
     }
+    console.error("buildBot: loaded handler", file, "with default:", !!mod.default);
     bot.use(mod.default);
   }
 
