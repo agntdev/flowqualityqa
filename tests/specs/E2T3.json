@@ -1,0 +1,46 @@
+[
+  {
+    "name": "tapping Results button shows poll not found when no Redis",
+    "steps": [
+      {
+        "send": { "callback": "results:poll:test_poll", "messageId": 1001 },
+        "expect": [
+          { "method": "answerCallbackQuery", "payload": { "text": "Poll not found.", "show_alert": true } }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "tapping Back from results shows poll not found when no Redis",
+    "steps": [
+      {
+        "send": { "callback": "results:back:test_poll", "messageId": 1002 },
+        "expect": [
+          { "method": "answerCallbackQuery", "payload": { "text": "Poll not found.", "show_alert": true } }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "results callback with empty poll id is answered silently",
+    "steps": [
+      {
+        "send": { "callback": "results:poll:", "messageId": 1003 },
+        "expect": [
+          { "method": "answerCallbackQuery" }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "back callback with empty poll id is answered silently",
+    "steps": [
+      {
+        "send": { "callback": "results:back:", "messageId": 1004 },
+        "expect": [
+          { "method": "answerCallbackQuery" }
+        ]
+      }
+    ]
+  }
+]

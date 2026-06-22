@@ -23,7 +23,7 @@ function buildLivePollKeyboard(pollId: string, optionCount: number) {
   for (let i = 0; i < optionCount; i++) {
     rows.push([inlineButton("Vote", `vote:opt:${pollId}:${i}`)]);
   }
-  rows.push([inlineButton("Close poll", `poll:close:${pollId}`)]);
+  rows.push([inlineButton("Results", `results:poll:${pollId}`), inlineButton("Close poll", `poll:close:${pollId}`)]);
   return inlineKeyboard(rows);
 }
 
@@ -100,9 +100,12 @@ async function tryEditPollMessage(ctx: Ctx, pollId: string) {
   }
 }
 
-composer.on("callback_query:data", async (ctx) => {
+composer.on("callback_query:data", async (ctx, next) => {
   const data = ctx.callbackQuery.data;
-  if (!data.startsWith("vote:opt:")) return;
+  if (!data.startsWith("vote:opt:")) {
+    await next();
+    return;
+  }
 
   const parts = data.split(":");
   const pollId = parts[2];

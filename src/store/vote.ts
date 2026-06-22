@@ -5,6 +5,7 @@ export interface Vote {
   poll_id: string;
   user_id: number;
   option_id: string;
+  voter_name?: string;
   created_at: string;
 }
 

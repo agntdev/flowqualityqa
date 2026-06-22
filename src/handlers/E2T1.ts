@@ -8,9 +8,12 @@ const pollStore = new PollStore();
 
 const composer = new Composer<Ctx>();
 
-composer.on("callback_query:data", async (ctx) => {
+composer.on("callback_query:data", async (ctx, next) => {
   const data = ctx.callbackQuery.data;
-  if (!data.startsWith("vote:opt:")) return;
+  if (!data.startsWith("vote:opt:")) {
+    await next();
+    return;
+  }
 
   const parts = data.split(":");
   const pollId = parts[2];
@@ -30,11 +33,14 @@ composer.on("callback_query:data", async (ctx) => {
   const optionId = `${pollId}_opt_${optIndex}`;
   const voteId = `vote_${pollId}_${userId}_${optIndex}`;
 
+  const voterName = ctx.from!.first_name ?? `User ${userId}`;
+
   const vote = {
     id: voteId,
     poll_id: pollId,
     user_id: userId,
     option_id: optionId,
+    voter_name: voterName,
     created_at: new Date().toISOString(),
   };
 
