@@ -1,0 +1,80 @@
+[
+  {
+    "name": "anonymous poll results hide voter names",
+    "setup": {
+      "kv": [
+        { "key": "poll:poll_anon_e6t4", "value": "{\"id\":\"poll_anon_e6t4\",\"chat_id\":1,\"message_id\":100,\"creator_user_id\":1,\"question\":\"Which language?\",\"is_anonymous\":true,\"is_closed\":false,\"created_at\":\"2025-01-01T00:00:00Z\",\"closed_at\":null}" },
+        { "key": "opt:opt_anon_a", "value": "{\"id\":\"opt_anon_a\",\"poll_id\":\"poll_anon_e6t4\",\"text\":\"Rust\",\"position\":0}" },
+        { "key": "opt:opt_anon_b", "value": "{\"id\":\"opt_anon_b\",\"poll_id\":\"poll_anon_e6t4\",\"text\":\"Go\",\"position\":1}" },
+        { "key": "opt:opt_anon_c", "value": "{\"id\":\"opt_anon_c\",\"poll_id\":\"poll_anon_e6t4\",\"text\":\"Python\",\"position\":2}" },
+        { "key": "vote:v_anon_0", "value": "{\"id\":\"v_anon_0\",\"poll_id\":\"poll_anon_e6t4\",\"user_id\":1,\"option_id\":\"opt_anon_a\",\"created_at\":\"2025-01-01T00:00:00Z\"}" },
+        { "key": "vote:v_anon_1", "value": "{\"id\":\"v_anon_1\",\"poll_id\":\"poll_anon_e6t4\",\"user_id\":2,\"option_id\":\"opt_anon_a\",\"created_at\":\"2025-01-01T00:00:00Z\"}" },
+        { "key": "vote:v_anon_2", "value": "{\"id\":\"v_anon_2\",\"poll_id\":\"poll_anon_e6t4\",\"user_id\":3,\"option_id\":\"opt_anon_a\",\"created_at\":\"2025-01-01T00:00:00Z\"}" },
+        { "key": "vote:v_anon_3", "value": "{\"id\":\"v_anon_3\",\"poll_id\":\"poll_anon_e6t4\",\"user_id\":4,\"option_id\":\"opt_anon_b\",\"created_at\":\"2025-01-01T00:00:00Z\"}" },
+        { "key": "vote:v_anon_4", "value": "{\"id\":\"v_anon_4\",\"poll_id\":\"poll_anon_e6t4\",\"user_id\":5,\"option_id\":\"opt_anon_b\",\"created_at\":\"2025-01-01T00:00:00Z\"}" },
+        { "key": "vote:v_anon_5", "value": "{\"id\":\"v_anon_5\",\"poll_id\":\"poll_anon_e6t4\",\"user_id\":6,\"option_id\":\"opt_anon_c\",\"created_at\":\"2025-01-01T00:00:00Z\"}" }
+      ],
+      "sets": [
+        { "key": "opt:poll:poll_anon_e6t4", "members": ["opt_anon_a", "opt_anon_b", "opt_anon_c"] },
+        { "key": "vote:poll:poll_anon_e6t4", "members": ["v_anon_0", "v_anon_1", "v_anon_2", "v_anon_3", "v_anon_4", "v_anon_5"] }
+      ]
+    },
+    "steps": [
+      {
+        "send": { "callback": "poll:live_results:poll_anon_e6t4", "messageId": 100 },
+        "expect": [
+          { "method": "answerCallbackQuery", "payload": {} },
+          {
+            "method": "editMessageText",
+            "payload": {
+              "text": "<b>📊 Results</b>\n\n<b>Question:</b> Which language?\n\n<b>Rust</b>\n██████████ 3 votes (50%)\n\n<b>Go</b>\n███████ 2 votes (33%)\n\n<b>Python</b>\n███ 1 vote (17%)\n\nTotal votes: 6",
+              "parse_mode": "HTML",
+              "reply_markup": {
+                "inline_keyboard": [
+                  [{ "text": "🔙 Back to poll", "callback_data": "poll:back:poll_anon_e6t4" }]
+                ]
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "named poll results show voter names",
+    "setup": {
+      "kv": [
+        { "key": "poll:poll_named_e6t4", "value": "{\"id\":\"poll_named_e6t4\",\"chat_id\":1,\"message_id\":200,\"creator_user_id\":1,\"question\":\"Best framework?\",\"is_anonymous\":false,\"is_closed\":false,\"created_at\":\"2025-01-01T00:00:00Z\",\"closed_at\":null}" },
+        { "key": "opt:opt_named_a", "value": "{\"id\":\"opt_named_a\",\"poll_id\":\"poll_named_e6t4\",\"text\":\"React\",\"position\":0}" },
+        { "key": "opt:opt_named_b", "value": "{\"id\":\"opt_named_b\",\"poll_id\":\"poll_named_e6t4\",\"text\":\"Vue\",\"position\":1}" },
+        { "key": "vote:v_named_0", "value": "{\"id\":\"v_named_0\",\"poll_id\":\"poll_named_e6t4\",\"user_id\":1,\"option_id\":\"opt_named_a\",\"created_at\":\"2025-01-01T00:00:00Z\"}" },
+        { "key": "vote:v_named_1", "value": "{\"id\":\"v_named_1\",\"poll_id\":\"poll_named_e6t4\",\"user_id\":2,\"option_id\":\"opt_named_a\",\"created_at\":\"2025-01-01T00:00:00Z\"}" },
+        { "key": "vote:v_named_2", "value": "{\"id\":\"v_named_2\",\"poll_id\":\"poll_named_e6t4\",\"user_id\":3,\"option_id\":\"opt_named_b\",\"created_at\":\"2025-01-01T00:00:00Z\"}" }
+      ],
+      "sets": [
+        { "key": "opt:poll:poll_named_e6t4", "members": ["opt_named_a", "opt_named_b"] },
+        { "key": "vote:poll:poll_named_e6t4", "members": ["v_named_0", "v_named_1", "v_named_2"] }
+      ]
+    },
+    "steps": [
+      {
+        "send": { "callback": "poll:live_results:poll_named_e6t4", "messageId": 200 },
+        "expect": [
+          { "method": "answerCallbackQuery", "payload": {} },
+          {
+            "method": "editMessageText",
+            "payload": {
+              "text": "<b>📊 Results</b>\n\n<b>Question:</b> Best framework?\n\n<b>React</b>\n█████████████ 2 votes (67%)\n  1. User 1\n  2. User 2\n\n<b>Vue</b>\n███████ 1 vote (33%)\n  1. User 3\n\nTotal votes: 3",
+              "parse_mode": "HTML",
+              "reply_markup": {
+                "inline_keyboard": [
+                  [{ "text": "🔙 Back to poll", "callback_data": "poll:back:poll_named_e6t4" }]
+                ]
+              }
+            }
+          }
+        ]
+      }
+    ]
+  }
+]
