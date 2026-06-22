@@ -1,0 +1,46 @@
+[
+  {
+    "name": "close permission: creator is authorized",
+    "steps": [
+      {
+        "send": { "callback": "perm:close:1:poll_1", "userId": 1, "messageId": 100 },
+        "expect": [
+          { "method": "answerCallbackQuery", "payload": { "text": "Permission granted. Use Close poll button.", "show_alert": false } }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "close permission: non-creator is denied",
+    "steps": [
+      {
+        "send": { "callback": "perm:close:1:poll_1", "userId": 2, "messageId": 100 },
+        "expect": [
+          { "method": "answerCallbackQuery", "payload": { "text": "Only the poll creator or a chat admin can close this poll.", "show_alert": true } }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "export permission: creator is authorized",
+    "steps": [
+      {
+        "send": { "callback": "perm:export:1:poll_1", "userId": 1, "messageId": 100 },
+        "expect": [
+          { "method": "answerCallbackQuery", "payload": { "text": "Permission granted. Use Export button.", "show_alert": false } }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "export permission: non-creator is denied",
+    "steps": [
+      {
+        "send": { "callback": "perm:export:1:poll_1", "userId": 2, "messageId": 100 },
+        "expect": [
+          { "method": "answerCallbackQuery", "payload": { "text": "Only the poll creator or a chat admin can export this poll.", "show_alert": true } }
+        ]
+      }
+    ]
+  }
+]
