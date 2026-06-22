@@ -1,0 +1,98 @@
+[
+  {
+    "name": "closed poll: close then view results on a closed poll",
+    "steps": [
+      {
+        "send": { "callback": "poll:close:1:2001:poll_E6T5_closed", "messageId": 2000 },
+        "expect": [
+          { "method": "answerCallbackQuery" },
+          { "method": "stopPoll", "payload": { "chat_id": 1, "message_id": 2001 } },
+          {
+            "method": "editMessageText",
+            "payload": {
+              "text": "✅ Poll closed.",
+              "reply_markup": {
+                "inline_keyboard": [
+                  [{ "text": "📊 Results", "callback_data": "poll:results:poll_E6T5_closed" }],
+                  [{ "text": "Export", "callback_data": "poll:export:poll_E6T5_closed" }]
+                ]
+              }
+            }
+          }
+        ]
+      },
+      {
+        "send": { "callback": "poll:results:poll_E6T5_closed", "messageId": 2000 },
+        "expect": [
+          { "method": "answerCallbackQuery", "payload": { "text": "Poll not found.", "show_alert": true } }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "closed poll: close then export a closed poll",
+    "steps": [
+      {
+        "send": { "callback": "poll:close:1:2001:poll_E6T5_export", "messageId": 2000 },
+        "expect": [
+          { "method": "answerCallbackQuery" },
+          { "method": "stopPoll", "payload": { "chat_id": 1, "message_id": 2001 } },
+          {
+            "method": "editMessageText",
+            "payload": {
+              "text": "✅ Poll closed.",
+              "reply_markup": {
+                "inline_keyboard": [
+                  [{ "text": "📊 Results", "callback_data": "poll:results:poll_E6T5_export" }],
+                  [{ "text": "Export", "callback_data": "poll:export:poll_E6T5_export" }]
+                ]
+              }
+            }
+          }
+        ]
+      },
+      {
+        "send": { "callback": "poll:export:poll_E6T5_export", "messageId": 2000 },
+        "expect": [
+          { "method": "answerCallbackQuery", "payload": { "text": "Poll not found.", "show_alert": true } }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "closed poll lifecycle: close, view results, then export",
+    "steps": [
+      {
+        "send": { "callback": "poll:close:1:3001:poll_E6T5_lifecycle", "messageId": 3000 },
+        "expect": [
+          { "method": "answerCallbackQuery" },
+          { "method": "stopPoll", "payload": { "chat_id": 1, "message_id": 3001 } },
+          {
+            "method": "editMessageText",
+            "payload": {
+              "text": "✅ Poll closed.",
+              "reply_markup": {
+                "inline_keyboard": [
+                  [{ "text": "📊 Results", "callback_data": "poll:results:poll_E6T5_lifecycle" }],
+                  [{ "text": "Export", "callback_data": "poll:export:poll_E6T5_lifecycle" }]
+                ]
+              }
+            }
+          }
+        ]
+      },
+      {
+        "send": { "callback": "poll:results:poll_E6T5_lifecycle", "messageId": 3000 },
+        "expect": [
+          { "method": "answerCallbackQuery", "payload": { "text": "Poll not found.", "show_alert": true } }
+        ]
+      },
+      {
+        "send": { "callback": "poll:export:poll_E6T5_lifecycle", "messageId": 3000 },
+        "expect": [
+          { "method": "answerCallbackQuery", "payload": { "text": "Poll not found.", "show_alert": true } }
+        ]
+      }
+    ]
+  }
+]

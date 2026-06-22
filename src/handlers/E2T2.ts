@@ -100,9 +100,9 @@ async function tryEditPollMessage(ctx: Ctx, pollId: string) {
   }
 }
 
-composer.on("callback_query:data", async (ctx) => {
+composer.on("callback_query:data", async (ctx, next) => {
   const data = ctx.callbackQuery.data;
-  if (!data.startsWith("vote:opt:")) return;
+  if (!data.startsWith("vote:opt:")) return next();
 
   const parts = data.split(":");
   const pollId = parts[2];
