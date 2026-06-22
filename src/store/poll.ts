@@ -1,4 +1,4 @@
-import { createRequire } from "node:module";
+import { getRedisClient, type RedisLike } from "./redis.js";
 
 export interface Poll {
   id: string;
@@ -12,32 +12,8 @@ export interface Poll {
   closed_at: string | null;
 }
 
-interface RedisLike {
-  get(key: string): Promise<string | null>;
-  set(key: string, value: string): Promise<unknown>;
-  del(key: string): Promise<unknown>;
-  sadd(key: string, ...members: string[]): Promise<number>;
-  smembers(key: string): Promise<string[]>;
-}
-
 const PollKeyPrefix = "poll:";
 const ChatIndexPrefix = "poll:chat:";
-
-function getRedisClient(): RedisLike | null {
-  const url = process.env.REDIS_URL;
-  if (!url) return null;
-  try {
-    const require = createRequire(import.meta.url);
-    const ioredis: Record<string, unknown> = require("ioredis");
-    const Redis = (ioredis.default ?? ioredis.Redis ?? ioredis) as new (
-      url: string,
-      opts: Record<string, unknown>,
-    ) => RedisLike;
-    return new Redis(url, { maxRetriesPerRequest: null, lazyConnect: false });
-  } catch {
-    return null;
-  }
-}
 
 export class PollStore {
   private redis: RedisLike | null;
