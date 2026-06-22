@@ -35,7 +35,11 @@ composer.on("callback_query:data", async (ctx, next) => {
   }
 
   const poll = await pollStore.getById(pollId);
-  if (poll && poll.is_closed) {
+  if (!poll) {
+    await ctx.answerCallbackQuery({ text: "Action no longer available", show_alert: true });
+    return;
+  }
+  if (poll.is_closed) {
     await ctx.answerCallbackQuery({ text: "This poll is closed.", show_alert: true });
     return;
   }

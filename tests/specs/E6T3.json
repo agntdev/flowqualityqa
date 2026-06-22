@@ -4,6 +4,10 @@
     "setup": {
       "kv": [
         {
+          "key": "poll:poll_test",
+          "value": "{\"id\":\"poll_test\",\"chat_id\":1,\"message_id\":100,\"creator_user_id\":1,\"question\":\"Test?\",\"is_anonymous\":true,\"is_closed\":false,\"created_at\":\"2024-01-01T00:00:00Z\",\"closed_at\":null}"
+        },
+        {
           "key": "opt:poll_test_opt_0",
           "value": "{\"id\":\"poll_test_opt_0\",\"poll_id\":\"poll_test\",\"text\":\"A\",\"position\":0}"
         }
@@ -28,6 +32,10 @@
     "name": "duplicate vote via same callback",
     "setup": {
       "kv": [
+        {
+          "key": "poll:poll_dup",
+          "value": "{\"id\":\"poll_dup\",\"chat_id\":1,\"message_id\":101,\"creator_user_id\":1,\"question\":\"Test?\",\"is_anonymous\":true,\"is_closed\":false,\"created_at\":\"2024-01-01T00:00:00Z\",\"closed_at\":null}"
+        },
         {
           "key": "opt:poll_dup_opt_0",
           "value": "{\"id\":\"poll_dup_opt_0\",\"poll_id\":\"poll_dup\",\"text\":\"A\",\"position\":0}"
@@ -59,6 +67,10 @@
     "name": "change vote via different callback",
     "setup": {
       "kv": [
+        {
+          "key": "poll:poll_chg",
+          "value": "{\"id\":\"poll_chg\",\"chat_id\":1,\"message_id\":103,\"creator_user_id\":1,\"question\":\"Test?\",\"is_anonymous\":true,\"is_closed\":false,\"created_at\":\"2024-01-01T00:00:00Z\",\"closed_at\":null}"
+        },
         {
           "key": "opt:poll_chg_opt_0",
           "value": "{\"id\":\"poll_chg_opt_0\",\"poll_id\":\"poll_chg\",\"text\":\"A\",\"position\":0}"
