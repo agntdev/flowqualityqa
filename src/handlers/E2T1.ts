@@ -41,6 +41,7 @@ composer.on("callback_query:data", async (ctx, next) => {
   const result = await voteStore.upsert(vote);
 
   await ctx.answerCallbackQuery({ text: "Vote recorded!" });
+  await next();
 });
 
 export default composer;
