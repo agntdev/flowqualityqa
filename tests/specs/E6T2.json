@@ -1,0 +1,140 @@
+[
+  {
+    "name": "reject done with only 1 option",
+    "steps": [
+      {
+        "send": { "callback": "menu:poll", "messageId": 1001 },
+        "expect": [
+          { "method": "answerCallbackQuery" },
+          { "method": "editMessageText", "payload": { "text": "Enter a poll question:" } }
+        ]
+      },
+      {
+        "send": { "text": "Q?" },
+        "expect": [
+          { "method": "sendMessage", "payload": { "text": "Question set. Now send the poll options." } }
+        ]
+      },
+      {
+        "send": { "text": "show" },
+        "expect": [
+          { "method": "sendMessage" }
+        ]
+      },
+      {
+        "send": { "callback": "option:add", "messageId": 1003 },
+        "expect": [
+          { "method": "answerCallbackQuery" },
+          { "method": "editMessageText", "payload": { "text": "Enter option 1:" } }
+        ]
+      },
+      {
+        "send": { "text": "A" },
+        "expect": [
+          { "method": "editMessageText" }
+        ]
+      },
+      {
+        "send": { "callback": "option:done", "messageId": 1003 },
+        "expect": [
+          { "method": "answerCallbackQuery" }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "reject 6th option",
+    "steps": [
+      {
+        "send": { "callback": "menu:poll", "messageId": 1001 },
+        "expect": [
+          { "method": "answerCallbackQuery" },
+          { "method": "editMessageText", "payload": { "text": "Enter a poll question:" } }
+        ]
+      },
+      {
+        "send": { "text": "Q?" },
+        "expect": [
+          { "method": "sendMessage", "payload": { "text": "Question set. Now send the poll options." } }
+        ]
+      },
+      {
+        "send": { "text": "show" },
+        "expect": [
+          { "method": "sendMessage" }
+        ]
+      },
+      {
+        "send": { "callback": "option:add", "messageId": 1003 },
+        "expect": [
+          { "method": "answerCallbackQuery" },
+          { "method": "editMessageText", "payload": { "text": "Enter option 1:" } }
+        ]
+      },
+      {
+        "send": { "text": "A" },
+        "expect": [
+          { "method": "editMessageText" }
+        ]
+      },
+      {
+        "send": { "callback": "option:add", "messageId": 1003 },
+        "expect": [
+          { "method": "answerCallbackQuery" },
+          { "method": "editMessageText", "payload": { "text": "Enter option 2:" } }
+        ]
+      },
+      {
+        "send": { "text": "B" },
+        "expect": [
+          { "method": "editMessageText" }
+        ]
+      },
+      {
+        "send": { "callback": "option:add", "messageId": 1003 },
+        "expect": [
+          { "method": "answerCallbackQuery" },
+          { "method": "editMessageText", "payload": { "text": "Enter option 3:" } }
+        ]
+      },
+      {
+        "send": { "text": "C" },
+        "expect": [
+          { "method": "editMessageText" }
+        ]
+      },
+      {
+        "send": { "callback": "option:add", "messageId": 1003 },
+        "expect": [
+          { "method": "answerCallbackQuery" },
+          { "method": "editMessageText", "payload": { "text": "Enter option 4:" } }
+        ]
+      },
+      {
+        "send": { "text": "D" },
+        "expect": [
+          { "method": "editMessageText" }
+        ]
+      },
+      {
+        "send": { "callback": "option:add", "messageId": 1003 },
+        "expect": [
+          { "method": "answerCallbackQuery" },
+          { "method": "editMessageText", "payload": { "text": "Enter option 5:" } }
+        ]
+      },
+      {
+        "send": { "text": "E" },
+        "expect": [
+          { "method": "editMessageText" }
+        ]
+      },
+      {
+        "send": { "callback": "option:add", "messageId": 1003 },
+        "expect": [
+          { "method": "answerCallbackQuery" }
+        ]
+      }
+    ]
+  }
+]
