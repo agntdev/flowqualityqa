@@ -13,7 +13,9 @@ composer.on("message:text", async (ctx, next) => {
     return;
   }
 
-  ctx.session.poll!.question = text;
+  if (!ctx.session.poll) return;
+
+  ctx.session.poll.question = text;
   ctx.session.step = "awaiting_poll_options";
   await ctx.reply("Question set. Now send the poll options.");
 });
