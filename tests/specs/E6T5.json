@@ -1,6 +1,22 @@
 [
   {
     "name": "closed poll: close then view results on a closed poll",
+    "setup": {
+      "kv": [
+        { "key": "poll:poll_E6T5_closed", "value": "{\"id\":\"poll_E6T5_closed\",\"chat_id\":1,\"message_id\":2001,\"creator_user_id\":1,\"question\":\"Best color?\",\"is_anonymous\":true,\"is_closed\":false,\"created_at\":\"2025-01-01T00:00:00Z\",\"closed_at\":null}" },
+        { "key": "opt:opt_E6T5_closed_a", "value": "{\"id\":\"opt_E6T5_closed_a\",\"poll_id\":\"poll_E6T5_closed\",\"text\":\"Red\",\"position\":0}" },
+        { "key": "opt:opt_E6T5_closed_b", "value": "{\"id\":\"opt_E6T5_closed_b\",\"poll_id\":\"poll_E6T5_closed\",\"text\":\"Blue\",\"position\":1}" },
+        { "key": "opt:opt_E6T5_closed_c", "value": "{\"id\":\"opt_E6T5_closed_c\",\"poll_id\":\"poll_E6T5_closed\",\"text\":\"Green\",\"position\":2}" },
+        { "key": "vote:vote_E6T5_closed_0", "value": "{\"id\":\"vote_E6T5_closed_0\",\"poll_id\":\"poll_E6T5_closed\",\"user_id\":2,\"option_id\":\"opt_E6T5_closed_a\",\"created_at\":\"2025-01-01T00:00:00Z\"}" },
+        { "key": "vote:vote_E6T5_closed_1", "value": "{\"id\":\"vote_E6T5_closed_1\",\"poll_id\":\"poll_E6T5_closed\",\"user_id\":3,\"option_id\":\"opt_E6T5_closed_a\",\"created_at\":\"2025-01-01T00:00:00Z\"}" },
+        { "key": "vote:vote_E6T5_closed_2", "value": "{\"id\":\"vote_E6T5_closed_2\",\"poll_id\":\"poll_E6T5_closed\",\"user_id\":4,\"option_id\":\"opt_E6T5_closed_b\",\"created_at\":\"2025-01-01T00:00:00Z\"}" },
+        { "key": "vote:vote_E6T5_closed_3", "value": "{\"id\":\"vote_E6T5_closed_3\",\"poll_id\":\"poll_E6T5_closed\",\"user_id\":5,\"option_id\":\"opt_E6T5_closed_c\",\"created_at\":\"2025-01-01T00:00:00Z\"}" }
+      ],
+      "sets": [
+        { "key": "opt:poll:poll_E6T5_closed", "members": ["opt_E6T5_closed_a", "opt_E6T5_closed_b", "opt_E6T5_closed_c"] },
+        { "key": "vote:poll:poll_E6T5_closed", "members": ["vote_E6T5_closed_0", "vote_E6T5_closed_1", "vote_E6T5_closed_2", "vote_E6T5_closed_3"] }
+      ]
+    },
     "steps": [
       {
         "send": { "callback": "poll:close:1:2001:poll_E6T5_closed", "messageId": 2000 },
@@ -24,13 +40,36 @@
       {
         "send": { "callback": "poll:results:poll_E6T5_closed", "messageId": 2000 },
         "expect": [
-          { "method": "answerCallbackQuery", "payload": { "text": "Poll not found.", "show_alert": true } }
+          { "method": "answerCallbackQuery" },
+          {
+            "method": "editMessageText",
+            "payload": {
+              "text": "<b>📊 Results</b>\n\n<b>Question:</b> Best color?\n\nRed: 2 votes (50%)\n<code>█████</code>\nBlue: 1 vote (25%)\n<code>███</code>\nGreen: 1 vote (25%)\n<code>███</code>\n\nTotal votes: 4",
+              "parse_mode": "HTML",
+              "reply_markup": { "inline_keyboard": [] }
+            }
+          }
         ]
       }
     ]
   },
   {
     "name": "closed poll: close then export a closed poll",
+    "setup": {
+      "kv": [
+        { "key": "poll:poll_E6T5_export", "value": "{\"id\":\"poll_E6T5_export\",\"chat_id\":1,\"message_id\":2001,\"creator_user_id\":1,\"question\":\"Best color?\",\"is_anonymous\":true,\"is_closed\":false,\"created_at\":\"2025-01-01T00:00:00Z\",\"closed_at\":null}" },
+        { "key": "opt:opt_E6T5_export_a", "value": "{\"id\":\"opt_E6T5_export_a\",\"poll_id\":\"poll_E6T5_export\",\"text\":\"Red\",\"position\":0}" },
+        { "key": "opt:opt_E6T5_export_b", "value": "{\"id\":\"opt_E6T5_export_b\",\"poll_id\":\"poll_E6T5_export\",\"text\":\"Blue\",\"position\":1}" },
+        { "key": "opt:opt_E6T5_export_c", "value": "{\"id\":\"opt_E6T5_export_c\",\"poll_id\":\"poll_E6T5_export\",\"text\":\"Green\",\"position\":2}" },
+        { "key": "vote:vote_E6T5_export_0", "value": "{\"id\":\"vote_E6T5_export_0\",\"poll_id\":\"poll_E6T5_export\",\"user_id\":2,\"option_id\":\"opt_E6T5_export_a\",\"created_at\":\"2025-01-01T00:00:00Z\"}" },
+        { "key": "vote:vote_E6T5_export_1", "value": "{\"id\":\"vote_E6T5_export_1\",\"poll_id\":\"poll_E6T5_export\",\"user_id\":3,\"option_id\":\"opt_E6T5_export_a\",\"created_at\":\"2025-01-01T00:00:00Z\"}" },
+        { "key": "vote:vote_E6T5_export_2", "value": "{\"id\":\"vote_E6T5_export_2\",\"poll_id\":\"poll_E6T5_export\",\"user_id\":4,\"option_id\":\"opt_E6T5_export_b\",\"created_at\":\"2025-01-01T00:00:00Z\"}" }
+      ],
+      "sets": [
+        { "key": "opt:poll:poll_E6T5_export", "members": ["opt_E6T5_export_a", "opt_E6T5_export_b", "opt_E6T5_export_c"] },
+        { "key": "vote:poll:poll_E6T5_export", "members": ["vote_E6T5_export_0", "vote_E6T5_export_1", "vote_E6T5_export_2"] }
+      ]
+    },
     "steps": [
       {
         "send": { "callback": "poll:close:1:2001:poll_E6T5_export", "messageId": 2000 },
@@ -54,13 +93,30 @@
       {
         "send": { "callback": "poll:export:poll_E6T5_export", "messageId": 2000 },
         "expect": [
-          { "method": "answerCallbackQuery", "payload": { "text": "Poll not found.", "show_alert": true } }
+          { "method": "answerCallbackQuery" },
+          { "method": "sendDocument", "payload": { "chat_id": 1, "caption": "Poll export: Best color?" } }
         ]
       }
     ]
   },
   {
     "name": "closed poll lifecycle: close, view results, then export",
+    "setup": {
+      "kv": [
+        { "key": "poll:poll_E6T5_lifecycle", "value": "{\"id\":\"poll_E6T5_lifecycle\",\"chat_id\":1,\"message_id\":3001,\"creator_user_id\":1,\"question\":\"Best color?\",\"is_anonymous\":true,\"is_closed\":false,\"created_at\":\"2025-01-01T00:00:00Z\",\"closed_at\":null}" },
+        { "key": "opt:opt_E6T5_lifecycle_a", "value": "{\"id\":\"opt_E6T5_lifecycle_a\",\"poll_id\":\"poll_E6T5_lifecycle\",\"text\":\"Red\",\"position\":0}" },
+        { "key": "opt:opt_E6T5_lifecycle_b", "value": "{\"id\":\"opt_E6T5_lifecycle_b\",\"poll_id\":\"poll_E6T5_lifecycle\",\"text\":\"Blue\",\"position\":1}" },
+        { "key": "opt:opt_E6T5_lifecycle_c", "value": "{\"id\":\"opt_E6T5_lifecycle_c\",\"poll_id\":\"poll_E6T5_lifecycle\",\"text\":\"Green\",\"position\":2}" },
+        { "key": "vote:vote_E6T5_lifecycle_0", "value": "{\"id\":\"vote_E6T5_lifecycle_0\",\"poll_id\":\"poll_E6T5_lifecycle\",\"user_id\":2,\"option_id\":\"opt_E6T5_lifecycle_a\",\"created_at\":\"2025-01-01T00:00:00Z\"}" },
+        { "key": "vote:vote_E6T5_lifecycle_1", "value": "{\"id\":\"vote_E6T5_lifecycle_1\",\"poll_id\":\"poll_E6T5_lifecycle\",\"user_id\":3,\"option_id\":\"opt_E6T5_lifecycle_b\",\"created_at\":\"2025-01-01T00:00:00Z\"}" },
+        { "key": "vote:vote_E6T5_lifecycle_2", "value": "{\"id\":\"vote_E6T5_lifecycle_2\",\"poll_id\":\"poll_E6T5_lifecycle\",\"user_id\":4,\"option_id\":\"opt_E6T5_lifecycle_b\",\"created_at\":\"2025-01-01T00:00:00Z\"}" },
+        { "key": "vote:vote_E6T5_lifecycle_3", "value": "{\"id\":\"vote_E6T5_lifecycle_3\",\"poll_id\":\"poll_E6T5_lifecycle\",\"user_id\":5,\"option_id\":\"opt_E6T5_lifecycle_c\",\"created_at\":\"2025-01-01T00:00:00Z\"}" }
+      ],
+      "sets": [
+        { "key": "opt:poll:poll_E6T5_lifecycle", "members": ["opt_E6T5_lifecycle_a", "opt_E6T5_lifecycle_b", "opt_E6T5_lifecycle_c"] },
+        { "key": "vote:poll:poll_E6T5_lifecycle", "members": ["vote_E6T5_lifecycle_0", "vote_E6T5_lifecycle_1", "vote_E6T5_lifecycle_2", "vote_E6T5_lifecycle_3"] }
+      ]
+    },
     "steps": [
       {
         "send": { "callback": "poll:close:1:3001:poll_E6T5_lifecycle", "messageId": 3000 },
@@ -84,13 +140,22 @@
       {
         "send": { "callback": "poll:results:poll_E6T5_lifecycle", "messageId": 3000 },
         "expect": [
-          { "method": "answerCallbackQuery", "payload": { "text": "Poll not found.", "show_alert": true } }
+          { "method": "answerCallbackQuery" },
+          {
+            "method": "editMessageText",
+            "payload": {
+              "text": "<b>📊 Results</b>\n\n<b>Question:</b> Best color?\n\nRed: 1 vote (25%)\n<code>███</code>\nBlue: 2 votes (50%)\n<code>█████</code>\nGreen: 1 vote (25%)\n<code>███</code>\n\nTotal votes: 4",
+              "parse_mode": "HTML",
+              "reply_markup": { "inline_keyboard": [] }
+            }
+          }
         ]
       },
       {
         "send": { "callback": "poll:export:poll_E6T5_lifecycle", "messageId": 3000 },
         "expect": [
-          { "method": "answerCallbackQuery", "payload": { "text": "Poll not found.", "show_alert": true } }
+          { "method": "answerCallbackQuery" },
+          { "method": "sendDocument", "payload": { "chat_id": 1, "caption": "Poll export: Best color?" } }
         ]
       }
     ]
