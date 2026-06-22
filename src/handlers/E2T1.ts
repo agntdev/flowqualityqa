@@ -43,6 +43,7 @@ composer.on("callback_query:data", async (ctx, next) => {
   if (recorded) {
     await ctx.answerCallbackQuery({ text: "Vote recorded!" });
   }
+  await next();
 });
 
 export default composer;
