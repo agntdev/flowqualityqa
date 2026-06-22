@@ -101,6 +101,10 @@ function validatePublicCsv(lines: string[]): string[] {
     if (fields[1] !== "1") {
       issues.push(`Row ${i}: vote column must be "1" for public polls, got "${fields[1]}"`);
     }
+    if (!fields[2]) {
+      issues.push(`Row ${i}: voter ID is missing`);
+      continue;
+    }
     const voter = Number(fields[2]);
     if (!Number.isInteger(voter) || voter < 0) {
       issues.push(`Row ${i}: voter ID must be a non-negative integer, got "${fields[2]}"`);
