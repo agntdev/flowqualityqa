@@ -1,0 +1,36 @@
+[
+  {
+    "name": "menu:about callback shows about text",
+    "steps": [
+      {
+        "send": { "callback": "menu:about", "messageId": 1001 },
+        "expect": [
+          { "method": "answerCallbackQuery" },
+          {
+            "method": "editMessageText",
+            "payload": {
+              "text": "AGNTDEV Bot — a Telegram bot built with the grammY framework."
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "menu:help callback shows help text",
+    "steps": [
+      {
+        "send": { "callback": "menu:help", "messageId": 1001 },
+        "expect": [
+          { "method": "answerCallbackQuery" },
+          {
+            "method": "editMessageText",
+            "payload": {
+              "text": "Use the buttons below to navigate. Send /start to return to the main menu."
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

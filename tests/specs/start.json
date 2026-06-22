@@ -1,11 +1,24 @@
 [
   {
-    "name": "/start replies with a welcome",
+    "name": "/start replies with welcome and main menu",
     "steps": [
       {
         "send": { "text": "/start" },
         "expect": [
-          { "method": "sendMessage", "payload": { "text": "Welcome! I am ready to help." } }
+          {
+            "method": "sendMessage",
+            "payload": {
+              "text": "Welcome to AGNTDEV Bot!\n\nUse the menu below to get started.",
+              "reply_markup": {
+                "inline_keyboard": [
+                  [
+                    { "text": "About", "callback_data": "menu:about" },
+                    { "text": "Help", "callback_data": "menu:help" }
+                  ]
+                ]
+              }
+            }
+          }
         ]
       }
     ]
