@@ -12,6 +12,14 @@
   },
   {
     "name": "/admins by admin lists admin IDs",
+    "setup": {
+      "sets": [
+        {
+          "key": "bot:admins",
+          "members": ["1"]
+        }
+      ]
+    },
     "steps": [
       {
         "send": { "text": "/admins", "userId": 1 },
