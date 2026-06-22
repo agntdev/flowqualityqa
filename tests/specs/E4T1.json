@@ -1,0 +1,36 @@
+[
+  {
+    "name": "/poll creates a poll and persists it",
+    "steps": [
+      {
+        "send": { "text": "/poll Favorite color? | Red | Blue | Green" },
+        "expect": [
+          { "method": "sendPoll", "payload": { "question": "Favorite color?", "options": [{ "text": "Red" }, { "text": "Blue" }, { "text": "Green" }] } },
+          { "method": "sendMessage", "payload": { "text": "Poll created (ID: poll_1_1001). It will close automatically when Telegram closes the poll." } }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "/poll with no arguments shows usage",
+    "steps": [
+      {
+        "send": { "text": "/poll" },
+        "expect": [
+          { "method": "sendMessage", "payload": { "text": "Usage: /poll \"Question\" | \"Option A\" | \"Option B\"" } }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "/poll with one option shows error",
+    "steps": [
+      {
+        "send": { "text": "/poll Test | OnlyOne" },
+        "expect": [
+          { "method": "sendMessage", "payload": { "text": "A poll needs at least 2 options. Separate them with |" } }
+        ]
+      }
+    ]
+  }
+]
