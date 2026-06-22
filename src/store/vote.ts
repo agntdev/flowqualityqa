@@ -93,6 +93,24 @@ export class VoteStore {
     return vote;
   }
 
+  async update(vote: Vote): Promise<Vote | null> {
+    if (!this.redis) return vote;
+
+    const uk = this.uk(vote.poll_id, vote.user_id);
+    const oldVoteId = await this.redis.get(uk);
+
+    if (oldVoteId && oldVoteId !== vote.id) {
+      await this.redis.del(this.pk(oldVoteId));
+      await this.redis.srem(this.ik(vote.poll_id), oldVoteId);
+    }
+
+    await this.redis.set(this.pk(vote.id), JSON.stringify(vote));
+    await this.redis.set(uk, vote.id);
+    await this.redis.sadd(this.ik(vote.poll_id), vote.id);
+
+    return vote;
+  }
+
   async listByPoll(pollId: string): Promise<Vote[]> {
     if (!this.redis) return [];
     const ids = await this.redis.smembers(this.ik(pollId));
