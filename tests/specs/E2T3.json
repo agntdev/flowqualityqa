@@ -1,0 +1,35 @@
+[
+  {
+    "name": "results button shows not found for missing poll",
+    "steps": [
+      {
+        "send": { "callback": "poll:live_results:nonexistent", "messageId": 100 },
+        "expect": [
+          { "method": "answerCallbackQuery", "payload": { "text": "Poll not found.", "show_alert": true } }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "results button with empty poll ID",
+    "steps": [
+      {
+        "send": { "callback": "poll:live_results:", "messageId": 101 },
+        "expect": [
+          { "method": "answerCallbackQuery", "payload": {} }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "back button with empty poll ID",
+    "steps": [
+      {
+        "send": { "callback": "poll:back:", "messageId": 102 },
+        "expect": [
+          { "method": "answerCallbackQuery", "payload": {} }
+        ]
+      }
+    ]
+  }
+]

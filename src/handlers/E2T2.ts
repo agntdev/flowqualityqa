@@ -23,7 +23,7 @@ function buildLivePollKeyboard(pollId: string, optionCount: number) {
   for (let i = 0; i < optionCount; i++) {
     rows.push([inlineButton("Vote", `vote:opt:${pollId}:${i}`)]);
   }
-  rows.push([inlineButton("Close poll", `poll:close:${pollId}`)]);
+  rows.push([inlineButton("Results", `poll:live_results:${pollId}`), inlineButton("Close poll", `poll:close:${pollId}`)]);
   return inlineKeyboard(rows);
 }
 
