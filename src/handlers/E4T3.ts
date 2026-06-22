@@ -6,7 +6,7 @@ const store = new VoteStore();
 
 const composer = new Composer<Ctx>();
 
-composer.on("poll_answer", async (ctx) => {
+composer.on("poll_answer", async (ctx, next) => {
   const answer = ctx.pollAnswer;
   if (!answer) return;
 
@@ -40,6 +40,8 @@ composer.on("poll_answer", async (ctx) => {
 
     await store.create(vote);
   }
+
+  await next();
 });
 
 export default composer;
