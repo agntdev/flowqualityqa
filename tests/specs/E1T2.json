@@ -1,0 +1,58 @@
+[
+  {
+    "name": "valid poll question is accepted",
+    "steps": [
+      {
+        "send": { "callback": "menu:poll", "messageId": 1001 },
+        "expect": [
+          { "method": "answerCallbackQuery" },
+          {
+            "method": "editMessageText",
+            "payload": {
+              "text": "Enter a poll question:"
+            }
+          }
+        ]
+      },
+      {
+        "send": { "text": "What is your favorite color?" },
+        "expect": [
+          {
+            "method": "sendMessage",
+            "payload": {
+              "text": "Question set. Now send the poll options."
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "empty poll question is rejected",
+    "steps": [
+      {
+        "send": { "callback": "menu:poll", "messageId": 1001 },
+        "expect": [
+          { "method": "answerCallbackQuery" },
+          {
+            "method": "editMessageText",
+            "payload": {
+              "text": "Enter a poll question:"
+            }
+          }
+        ]
+      },
+      {
+        "send": { "text": "   " },
+        "expect": [
+          {
+            "method": "sendMessage",
+            "payload": {
+              "text": "Question cannot be empty. Please enter a poll question:"
+            }
+          }
+        ]
+      }
+    ]
+  }
+]
