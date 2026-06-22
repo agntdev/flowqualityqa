@@ -77,7 +77,10 @@ async function tryEditPollMessage(ctx: Ctx, pollId: string) {
 
   try {
     const poll = await pollStore.getById(pollId);
-    if (!poll || poll.is_closed) return;
+    if (!poll || poll.is_closed) {
+      pollEditTimestamps.delete(pollId);
+      return;
+    }
 
     const options = await optionStore.listByPoll(pollId);
     if (options.length === 0) return;
