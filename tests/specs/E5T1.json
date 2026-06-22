@@ -1,0 +1,24 @@
+[
+  {
+    "name": "stale callback data shows alert",
+    "steps": [
+      {
+        "send": { "callback": "stale_data_123" },
+        "expect": [
+          { "method": "answerCallbackQuery", "payload": { "text": "Action no longer available", "show_alert": true } }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "malformed callback data shows alert",
+    "steps": [
+      {
+        "send": { "callback": "garbage" },
+        "expect": [
+          { "method": "answerCallbackQuery", "payload": { "text": "Action no longer available", "show_alert": true } }
+        ]
+      }
+    ]
+  }
+]
