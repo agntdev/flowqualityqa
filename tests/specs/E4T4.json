@@ -1,0 +1,24 @@
+[
+  {
+    "name": "/admins by non-admin is denied",
+    "steps": [
+      {
+        "send": { "text": "/admins" },
+        "expect": [
+          { "method": "sendMessage", "payload": { "text": "Access denied." } }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "/admins by admin lists admin IDs",
+    "steps": [
+      {
+        "send": { "text": "/admins", "userId": 1 },
+        "expect": [
+          { "method": "sendMessage", "payload": { "text": "Admin IDs: 1" } }
+        ]
+      }
+    ]
+  }
+]
