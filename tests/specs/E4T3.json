@@ -1,0 +1,57 @@
+[
+  {
+    "name": "poll_answer by a user persists a vote",
+    "steps": [
+      {
+        "send": {
+          "update": {
+            "update_id": 1,
+            "poll_answer": {
+              "poll_id": "test_poll_1",
+              "voter_chat": { "id": 456, "type": "private" },
+              "user": { "id": 456, "is_bot": false, "first_name": "Voter" },
+              "option_ids": [0]
+            }
+          }
+        },
+        "expect": []
+      }
+    ]
+  },
+  {
+    "name": "poll_answer by anonymous poll is ignored",
+    "steps": [
+      {
+        "send": {
+          "update": {
+            "update_id": 2,
+            "poll_answer": {
+              "poll_id": "test_poll_2",
+              "option_ids": [1]
+            }
+          }
+        },
+        "expect": []
+      }
+    ]
+  },
+  {
+    "name": "poll_answer with empty option_ids is ignored",
+    "steps": [
+      {
+        "send": {
+          "update": {
+            "update_id": 3,
+            "poll_answer": {
+              "poll_id": "test_poll_3",
+              "voter_chat": { "id": 789, "type": "private" },
+              "user": { "id": 789, "is_bot": false, "first_name": "Retractor" },
+              "option_ids": []
+            }
+          }
+        },
+        "expect": []
+      }
+    ]
+  }
+]
