@@ -11,9 +11,9 @@ const KNOWN_PREFIXES = [
   "perm:",
 ];
 
-composer.on("callback_query", async (ctx) => {
+composer.on("callback_query", async (ctx, next) => {
   const data = ctx.callbackQuery.data;
-  if (data && KNOWN_PREFIXES.some((prefix) => data.startsWith(prefix))) return;
+  if (data && KNOWN_PREFIXES.some((prefix) => data.startsWith(prefix))) return next();
 
   await ctx.answerCallbackQuery({
     text: "Action no longer available",
