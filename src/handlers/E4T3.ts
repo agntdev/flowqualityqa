@@ -24,9 +24,6 @@ composer.on("poll_answer", async (ctx) => {
     const optionId = `${pollId}_opt_${optionIndex}`;
     const voteId = `${pollId}_vote_${userId}_${optionIndex}`;
 
-    const existing = await store.getVoteByUserAndPoll(pollId, userId);
-    if (existing) continue;
-
     const vote: Vote = {
       id: voteId,
       poll_id: pollId,
@@ -34,6 +31,12 @@ composer.on("poll_answer", async (ctx) => {
       option_id: optionId,
       created_at: new Date().toISOString(),
     };
+
+    const existing = await store.getVoteByUserAndPoll(pollId, userId);
+    if (existing) {
+      await store.update(vote);
+      continue;
+    }
 
     await store.create(vote);
   }
