@@ -63,12 +63,18 @@ export class VoteStore {
     if (!this.redis) return vote;
 
     const uk = this.uk(vote.poll_id, vote.user_id);
-    const exists = await this.redis.get(uk);
-    if (exists !== null) return null;
 
-    await this.redis.set(this.pk(vote.id), JSON.stringify(vote));
-    await this.redis.set(uk, vote.id);
-    await this.redis.sadd(this.ik(vote.poll_id), vote.id);
+    const multi = this.redis.multi();
+    multi.setnx(uk, vote.id);
+    multi.set(this.pk(vote.id), JSON.stringify(vote));
+    multi.sadd(this.ik(vote.poll_id), vote.id);
+    const results = await multi.exec();
+
+    if (results === null || results[0][1] !== 1) {
+      await this.redis.del(this.pk(vote.id));
+      await this.redis.srem(this.ik(vote.poll_id), vote.id);
+      return null;
+    }
 
     return vote;
   }
