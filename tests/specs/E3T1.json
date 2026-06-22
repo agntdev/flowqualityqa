@@ -1,0 +1,290 @@
+[
+  {
+    "name": "close poll by creator",
+    "steps": [
+      {
+        "send": { "callback": "menu:poll", "messageId": 1001 },
+        "expect": [
+          { "method": "answerCallbackQuery" },
+          { "method": "editMessageText", "payload": { "text": "Enter a poll question:" } }
+        ]
+      },
+      {
+        "send": { "text": "Q?" },
+        "expect": [
+          { "method": "sendMessage", "payload": { "text": "Question set. Now send the poll options." } }
+        ]
+      },
+      {
+        "send": { "text": "show" },
+        "expect": [
+          { "method": "sendMessage" }
+        ]
+      },
+      {
+        "send": { "callback": "option:add", "messageId": 1003 },
+        "expect": [
+          { "method": "answerCallbackQuery" },
+          { "method": "editMessageText", "payload": { "text": "Enter option 1:" } }
+        ]
+      },
+      {
+        "send": { "text": "A" },
+        "expect": [
+          { "method": "editMessageText" }
+        ]
+      },
+      {
+        "send": { "callback": "option:add", "messageId": 1003 },
+        "expect": [
+          { "method": "answerCallbackQuery" },
+          { "method": "editMessageText", "payload": { "text": "Enter option 2:" } }
+        ]
+      },
+      {
+        "send": { "text": "B" },
+        "expect": [
+          { "method": "editMessageText" }
+        ]
+      },
+      {
+        "send": { "callback": "option:done", "messageId": 1003 },
+        "expect": [
+          { "method": "answerCallbackQuery" },
+          {
+            "method": "editMessageText",
+            "payload": {
+              "text": "<b>\ud83d\udccb Poll Preview</b>\n\n<b>Question:</b> Q?\n<b>Type:</b> Anonymous\n\n<b>Options:</b>\n  1. A\n  2. B\n"
+            }
+          }
+        ]
+      },
+      {
+        "send": { "callback": "poll:post", "messageId": 1003 },
+        "expect": [
+          { "method": "answerCallbackQuery" },
+          { "method": "sendPoll", "payload": { "question": "Q?", "options": [{ "text": "A" }, { "text": "B" }] } },
+          {
+            "method": "editMessageText",
+            "payload": {
+              "text": "\u2705 Poll posted!",
+              "reply_markup": {
+                "inline_keyboard": [
+                  [{ "text": "Close poll", "callback_data": "poll:close:1:1014:poll_1_1014" }]
+                ]
+              }
+            }
+          }
+        ]
+      },
+      {
+        "send": { "callback": "poll:close:1:1014:poll_1_1014", "messageId": 1003 },
+        "expect": [
+          { "method": "answerCallbackQuery" },
+          { "method": "stopPoll", "payload": { "chat_id": 1, "message_id": 1014 } },
+          {
+            "method": "editMessageText",
+            "payload": {
+              "text": "\u2705 Poll closed.",
+              "reply_markup": {
+                "inline_keyboard": [
+                  [{ "text": "\ud83d\udcca Results", "callback_data": "poll:results:poll_1_1014" }]
+                ]
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "close poll by non-creator is rejected",
+    "steps": [
+      {
+        "send": { "callback": "menu:poll", "messageId": 1001 },
+        "expect": [
+          { "method": "answerCallbackQuery" },
+          { "method": "editMessageText", "payload": { "text": "Enter a poll question:" } }
+        ]
+      },
+      {
+        "send": { "text": "Q?" },
+        "expect": [
+          { "method": "sendMessage", "payload": { "text": "Question set. Now send the poll options." } }
+        ]
+      },
+      {
+        "send": { "text": "show" },
+        "expect": [
+          { "method": "sendMessage" }
+        ]
+      },
+      {
+        "send": { "callback": "option:add", "messageId": 1003 },
+        "expect": [
+          { "method": "answerCallbackQuery" },
+          { "method": "editMessageText", "payload": { "text": "Enter option 1:" } }
+        ]
+      },
+      {
+        "send": { "text": "A" },
+        "expect": [
+          { "method": "editMessageText" }
+        ]
+      },
+      {
+        "send": { "callback": "option:add", "messageId": 1003 },
+        "expect": [
+          { "method": "answerCallbackQuery" },
+          { "method": "editMessageText", "payload": { "text": "Enter option 2:" } }
+        ]
+      },
+      {
+        "send": { "text": "B" },
+        "expect": [
+          { "method": "editMessageText" }
+        ]
+      },
+      {
+        "send": { "callback": "option:done", "messageId": 1003 },
+        "expect": [
+          { "method": "answerCallbackQuery" },
+          {
+            "method": "editMessageText",
+            "payload": {
+              "text": "<b>\ud83d\udccb Poll Preview</b>\n\n<b>Question:</b> Q?\n<b>Type:</b> Anonymous\n\n<b>Options:</b>\n  1. A\n  2. B\n"
+            }
+          }
+        ]
+      },
+      {
+        "send": { "callback": "poll:post", "messageId": 1003 },
+        "expect": [
+          { "method": "answerCallbackQuery" },
+          { "method": "sendPoll", "payload": { "question": "Q?", "options": [{ "text": "A" }, { "text": "B" }] } },
+          {
+            "method": "editMessageText",
+            "payload": {
+              "text": "\u2705 Poll posted!",
+              "reply_markup": {
+                "inline_keyboard": [
+                  [{ "text": "Close poll", "callback_data": "poll:close:1:1014:poll_1_1014" }]
+                ]
+              }
+            }
+          }
+        ]
+      },
+      {
+        "send": { "callback": "poll:close:1:1014:poll_1_1014", "messageId": 1003, "userId": 2 },
+        "expect": [
+          { "method": "answerCallbackQuery", "payload": { "text": "Only the poll creator or a chat admin can close this poll.", "show_alert": true } }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "show results after poll is closed",
+    "steps": [
+      {
+        "send": { "callback": "menu:poll", "messageId": 1001 },
+        "expect": [
+          { "method": "answerCallbackQuery" },
+          { "method": "editMessageText", "payload": { "text": "Enter a poll question:" } }
+        ]
+      },
+      {
+        "send": { "text": "Q?" },
+        "expect": [
+          { "method": "sendMessage", "payload": { "text": "Question set. Now send the poll options." } }
+        ]
+      },
+      {
+        "send": { "text": "show" },
+        "expect": [
+          { "method": "sendMessage" }
+        ]
+      },
+      {
+        "send": { "callback": "option:add", "messageId": 1003 },
+        "expect": [
+          { "method": "answerCallbackQuery" },
+          { "method": "editMessageText", "payload": { "text": "Enter option 1:" } }
+        ]
+      },
+      {
+        "send": { "text": "A" },
+        "expect": [
+          { "method": "editMessageText" }
+        ]
+      },
+      {
+        "send": { "callback": "option:add", "messageId": 1003 },
+        "expect": [
+          { "method": "answerCallbackQuery" },
+          { "method": "editMessageText", "payload": { "text": "Enter option 2:" } }
+        ]
+      },
+      {
+        "send": { "text": "B" },
+        "expect": [
+          { "method": "editMessageText" }
+        ]
+      },
+      {
+        "send": { "callback": "option:done", "messageId": 1003 },
+        "expect": [
+          { "method": "answerCallbackQuery" },
+          {
+            "method": "editMessageText",
+            "payload": {
+              "text": "<b>\ud83d\udccb Poll Preview</b>\n\n<b>Question:</b> Q?\n<b>Type:</b> Anonymous\n\n<b>Options:</b>\n  1. A\n  2. B\n"
+            }
+          }
+        ]
+      },
+      {
+        "send": { "callback": "poll:post", "messageId": 1003 },
+        "expect": [
+          { "method": "answerCallbackQuery" },
+          { "method": "sendPoll", "payload": { "question": "Q?", "options": [{ "text": "A" }, { "text": "B" }] } },
+          {
+            "method": "editMessageText",
+            "payload": {
+              "text": "\u2705 Poll posted!",
+              "reply_markup": {
+                "inline_keyboard": [
+                  [{ "text": "Close poll", "callback_data": "poll:close:1:1014:poll_1_1014" }]
+                ]
+              }
+            }
+          }
+        ]
+      },
+      {
+        "send": { "callback": "poll:close:1:1014:poll_1_1014", "messageId": 1003 },
+        "expect": [
+          { "method": "answerCallbackQuery" },
+          { "method": "stopPoll", "payload": { "chat_id": 1, "message_id": 1014 } },
+          {
+            "method": "editMessageText",
+            "payload": {
+              "text": "\u2705 Poll closed.",
+              "reply_markup": {
+                "inline_keyboard": [
+                  [{ "text": "\ud83d\udcca Results", "callback_data": "poll:results:poll_1_1014" }]
+                ]
+              }
+            }
+          }
+        ]
+      },
+      {
+        "send": { "callback": "poll:results:poll_1_1014", "messageId": 1003 },
+        "expect": [
+          { "method": "answerCallbackQuery", "payload": { "text": "Poll not found.", "show_alert": true } }
+        ]
+      }
+    ]
+  }
+]
