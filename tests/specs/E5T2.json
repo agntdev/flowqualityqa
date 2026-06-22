@@ -5,7 +5,6 @@
       {
         "send": { "callback": "vote:opt:poll_e5t2_a:0", "messageId": 3001 },
         "expect": [
-          { "method": "answerCallbackQuery", "payload": { "text": "Vote recorded!" } },
           { "method": "answerCallbackQuery", "payload": { "text": "Vote recorded!" } }
         ]
       }
@@ -17,14 +16,12 @@
       {
         "send": { "callback": "vote:opt:poll_e5t2_b:0", "messageId": 3002 },
         "expect": [
-          { "method": "answerCallbackQuery", "payload": { "text": "Vote recorded!" } },
           { "method": "answerCallbackQuery", "payload": { "text": "Vote recorded!" } }
         ]
       },
       {
         "send": { "callback": "vote:opt:poll_e5t2_b:1", "messageId": 3003 },
         "expect": [
-          { "method": "answerCallbackQuery", "payload": { "text": "Vote recorded!" } },
           { "method": "answerCallbackQuery", "payload": { "text": "Vote recorded!" } }
         ]
       }

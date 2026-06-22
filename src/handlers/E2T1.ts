@@ -38,11 +38,9 @@ composer.on("callback_query:data", async (ctx, next) => {
     created_at: new Date().toISOString(),
   };
 
-  const recorded = await voteStore.update(vote);
+  const result = await voteStore.upsert(vote);
 
-  if (recorded) {
-    await ctx.answerCallbackQuery({ text: "Vote recorded!" });
-  }
+  await ctx.answerCallbackQuery({ text: "Vote recorded!" });
 });
 
 export default composer;
