@@ -1,7 +1,7 @@
 import { Composer } from "grammy";
 import type { Ctx } from "../bot.js";
 import { inlineKeyboard, inlineButton } from "../toolkit/index.js";
-import { buildOptionsText, buildOptionsKeyboard } from "./E1T3.js";
+import { buildOptionsText, buildOptionsKeyboard, buildPreviewText, buildPreviewKeyboard } from "../shared/poll-helpers.js";
 import { PollStore, type Poll } from "../store/poll.js";
 import { OptionStore, type Option } from "../store/option.js";
 
@@ -9,34 +9,6 @@ const pollStore = new PollStore();
 const optionStore = new OptionStore();
 
 const composer = new Composer<Ctx>();
-
-function escapeHtml(s: string): string {
-  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-}
-
-export function buildPreviewText(question: string, options: string[], anonymous: boolean): string {
-  const type = anonymous ? "Anonymous" : "Public";
-  let text = "<b>\u{1F4CB} Poll Preview</b>\n\n";
-  text += `<b>Question:</b> ${escapeHtml(question)}\n`;
-  text += `<b>Type:</b> ${type}\n\n`;
-  if (options.length > 0) {
-    text += "<b>Options:</b>\n";
-    for (let i = 0; i < options.length; i++) {
-      text += `  ${i + 1}. ${escapeHtml(options[i])}\n`;
-    }
-  }
-  return text;
-}
-
-export function buildPreviewKeyboard(anonymous: boolean) {
-  const anonLabel = anonymous ? "\u{1F464} Anonymous: ON" : "\u{1F464} Anonymous: OFF";
-  return inlineKeyboard([
-    [inlineButton("\u{1F4E4} Post poll", "poll:post")],
-    [inlineButton("\u270F\uFE0F Edit options", "poll:edit")],
-    [inlineButton(anonLabel, "poll:anon")],
-    [inlineButton("Cancel", "poll:cancel")],
-  ]);
-}
 
 composer.callbackQuery("poll:post", async (ctx) => {
   const poll = ctx.session.poll;

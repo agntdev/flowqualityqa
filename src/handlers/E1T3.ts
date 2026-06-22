@@ -1,45 +1,9 @@
 import { Composer } from "grammy";
 import type { Ctx } from "../bot.js";
 import { inlineKeyboard, inlineButton } from "../toolkit/index.js";
-import { buildPreviewText, buildPreviewKeyboard } from "./E1T4.js";
+import { buildOptionsText, buildOptionsKeyboard, buildPreviewText, buildPreviewKeyboard } from "../shared/poll-helpers.js";
 
 const composer = new Composer<Ctx>();
-
-function escapeHtml(s: string): string {
-  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-}
-
-export function buildOptionsText(question: string, options: string[], anonymous: boolean): string {
-  const type = anonymous ? "Anonymous" : "Public";
-  let text = `<b>Poll:</b> ${escapeHtml(question)}\n`;
-  text += `<b>Type:</b> ${type}\n\n`;
-  if (options.length > 0) {
-    text += "<b>Options:</b>\n";
-    for (let i = 0; i < options.length; i++) {
-      text += `  ${i + 1}. ${escapeHtml(options[i])}\n`;
-    }
-  } else {
-    text += "No options yet.\n";
-  }
-  text += `\n${options.length}/5 options (need 2–5)`;
-  return text;
-}
-
-export function buildOptionsKeyboard(options: string[], anonymous: boolean) {
-  const rows: ReturnType<typeof inlineButton>[][] = [];
-
-  rows.push([inlineButton("\u2795 Add option", "option:add")]);
-
-  if (options.length >= 2) {
-    rows.push([inlineButton("\u2705 Done", "option:done")]);
-  }
-
-  const anonLabel = anonymous ? "\u{1F464} Anonymous: ON" : "\u{1F464} Anonymous: OFF";
-  rows.push([inlineButton(anonLabel, "option:anon")]);
-  rows.push([inlineButton("Cancel", "option:cancel")]);
-
-  return inlineKeyboard(rows);
-}
 
 async function showBuilder(ctx: Ctx, poll: NonNullable<Ctx["session"]["poll"]>) {
   const options = poll.options ?? [];
