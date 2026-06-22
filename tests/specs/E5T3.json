@@ -1,0 +1,44 @@
+[
+  {
+    "name": "native poll close updates message and removes vote buttons",
+    "steps": [
+      {
+        "send": {
+          "update": {
+            "update_id": 10,
+            "poll": {
+              "id": "poll_closed_1",
+              "question": "Test?",
+              "is_closed": true,
+              "options": [{ "text": "A" }, { "text": "B" }],
+              "total_voter_count": 0,
+              "is_anonymous": true,
+              "type": "regular",
+              "allows_multiple_answers": false
+            }
+          }
+        },
+        "expect": []
+      }
+    ]
+  },
+  {
+    "name": "vote on closed poll via poll_answer shows closed message",
+    "steps": [
+      {
+        "send": {
+          "update": {
+            "update_id": 11,
+            "poll_answer": {
+              "poll_id": "poll_closed_2",
+              "voter_chat": { "id": 789, "type": "private" },
+              "user": { "id": 789, "is_bot": false, "first_name": "Voter" },
+              "option_ids": [0]
+            }
+          }
+        },
+        "expect": []
+      }
+    ]
+  }
+]
