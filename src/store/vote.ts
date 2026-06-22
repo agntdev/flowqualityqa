@@ -94,8 +94,8 @@ export class VoteStore {
   async upsert(vote: Vote): Promise<{ vote: Vote; wasOverwrite: boolean }> {
     if (!this.redis) return { vote, wasOverwrite: false };
 
-    const txuk = this.txuk(vote.poll_id, vote.user_id);
-    const oldVoteId = await this.redis.get(txuk);
+    const ukKey = this.uk(vote.poll_id, vote.user_id);
+    const oldVoteId = await this.redis.get(ukKey);
     const wasOverwrite = oldVoteId !== null && oldVoteId !== vote.id;
 
     const multi = this.redis.multi();
@@ -104,7 +104,7 @@ export class VoteStore {
       multi.srem(this.ik(vote.poll_id), oldVoteId!);
     }
     multi.set(this.pk(vote.id), JSON.stringify(vote));
-    multi.set(txuk, vote.id);
+    multi.set(ukKey, vote.id);
     multi.sadd(this.ik(vote.poll_id), vote.id);
     await multi.exec();
 
