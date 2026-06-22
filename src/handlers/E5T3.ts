@@ -4,14 +4,10 @@ import { PollStore } from "../store/poll.js";
 import { OptionStore } from "../store/option.js";
 import { VoteStore } from "../store/vote.js";
 import { inlineKeyboard } from "../toolkit/index.js";
-import { getRedisClient, getInMemoryClient } from "../store/redis.js";
 
-const sharedRedis = getRedisClient() ?? getInMemoryClient();
-export const pollStore = new PollStore(sharedRedis);
-export const optionStore = new OptionStore(sharedRedis);
-export const voteStore = new VoteStore(sharedRedis);
-
-console.log("[E5T3] module loaded, sharedRedis:", sharedRedis === null ? "null" : "present");
+const pollStore = new PollStore();
+const optionStore = new OptionStore();
+const voteStore = new VoteStore();
 
 const composer = new Composer<Ctx>();
 
