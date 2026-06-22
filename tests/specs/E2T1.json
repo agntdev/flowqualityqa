@@ -1,6 +1,24 @@
 [
   {
     "name": "record a vote via callback",
+    "setup": {
+      "kv": [
+        {
+          "key": "opt:poll_abc_opt_0",
+          "value": "{\"id\":\"poll_abc_opt_0\",\"poll_id\":\"poll_abc\",\"text\":\"A\",\"position\":0}"
+        },
+        {
+          "key": "opt:poll_abc_opt_1",
+          "value": "{\"id\":\"poll_abc_opt_1\",\"poll_id\":\"poll_abc\",\"text\":\"B\",\"position\":1}"
+        }
+      ],
+      "sets": [
+        {
+          "key": "opt:poll:poll_abc",
+          "members": ["poll_abc_opt_0", "poll_abc_opt_1"]
+        }
+      ]
+    },
     "steps": [
       {
         "send": { "callback": "vote:opt:poll_abc:0", "messageId": 1001 },
@@ -12,11 +30,104 @@
   },
   {
     "name": "change vote via callback",
+    "setup": {
+      "kv": [
+        {
+          "key": "opt:poll_abc_opt_0",
+          "value": "{\"id\":\"poll_abc_opt_0\",\"poll_id\":\"poll_abc\",\"text\":\"A\",\"position\":0}"
+        },
+        {
+          "key": "opt:poll_abc_opt_1",
+          "value": "{\"id\":\"poll_abc_opt_1\",\"poll_id\":\"poll_abc\",\"text\":\"B\",\"position\":1}"
+        }
+      ],
+      "sets": [
+        {
+          "key": "opt:poll:poll_abc",
+          "members": ["poll_abc_opt_0", "poll_abc_opt_1"]
+        }
+      ]
+    },
     "steps": [
       {
         "send": { "callback": "vote:opt:poll_abc:1", "messageId": 1002 },
         "expect": [
           { "method": "answerCallbackQuery", "payload": { "text": "Vote recorded!" } }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "reject vote for non-existent option index",
+    "setup": {
+      "kv": [
+        {
+          "key": "opt:poll_abc_opt_0",
+          "value": "{\"id\":\"poll_abc_opt_0\",\"poll_id\":\"poll_abc\",\"text\":\"A\",\"position\":0}"
+        }
+      ],
+      "sets": [
+        {
+          "key": "opt:poll:poll_abc",
+          "members": ["poll_abc_opt_0"]
+        }
+      ]
+    },
+    "steps": [
+      {
+        "send": { "callback": "vote:opt:poll_abc:5", "messageId": 1003 },
+        "expect": [
+          { "method": "answerCallbackQuery", "payload": { "text": "Invalid option.", "show_alert": true } }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "reject vote for negative option index",
+    "setup": {
+      "kv": [
+        {
+          "key": "opt:poll_abc_opt_0",
+          "value": "{\"id\":\"poll_abc_opt_0\",\"poll_id\":\"poll_abc\",\"text\":\"A\",\"position\":0}"
+        }
+      ],
+      "sets": [
+        {
+          "key": "opt:poll:poll_abc",
+          "members": ["poll_abc_opt_0"]
+        }
+      ]
+    },
+    "steps": [
+      {
+        "send": { "callback": "vote:opt:poll_abc:-1", "messageId": 1004 },
+        "expect": [
+          { "method": "answerCallbackQuery", "payload": { "text": "Invalid option.", "show_alert": true } }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "reject vote for NaN option index",
+    "setup": {
+      "kv": [
+        {
+          "key": "opt:poll_abc_opt_0",
+          "value": "{\"id\":\"poll_abc_opt_0\",\"poll_id\":\"poll_abc\",\"text\":\"A\",\"position\":0}"
+        }
+      ],
+      "sets": [
+        {
+          "key": "opt:poll:poll_abc",
+          "members": ["poll_abc_opt_0"]
+        }
+      ]
+    },
+    "steps": [
+      {
+        "send": { "callback": "vote:opt:poll_abc:xyz", "messageId": 1005 },
+        "expect": [
+          { "method": "answerCallbackQuery", "payload": { "text": "Invalid option.", "show_alert": true } }
         ]
       }
     ]

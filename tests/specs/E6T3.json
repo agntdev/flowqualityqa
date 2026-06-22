@@ -1,6 +1,20 @@
 [
   {
     "name": "cast a vote via callback",
+    "setup": {
+      "kv": [
+        {
+          "key": "opt:poll_test_opt_0",
+          "value": "{\"id\":\"poll_test_opt_0\",\"poll_id\":\"poll_test\",\"text\":\"A\",\"position\":0}"
+        }
+      ],
+      "sets": [
+        {
+          "key": "opt:poll:poll_test",
+          "members": ["poll_test_opt_0"]
+        }
+      ]
+    },
     "steps": [
       {
         "send": { "callback": "vote:opt:poll_test:0", "messageId": 100 },
@@ -12,6 +26,20 @@
   },
   {
     "name": "duplicate vote via same callback",
+    "setup": {
+      "kv": [
+        {
+          "key": "opt:poll_dup_opt_0",
+          "value": "{\"id\":\"poll_dup_opt_0\",\"poll_id\":\"poll_dup\",\"text\":\"A\",\"position\":0}"
+        }
+      ],
+      "sets": [
+        {
+          "key": "opt:poll:poll_dup",
+          "members": ["poll_dup_opt_0"]
+        }
+      ]
+    },
     "steps": [
       {
         "send": { "callback": "vote:opt:poll_dup:0", "messageId": 101 },
@@ -29,6 +57,24 @@
   },
   {
     "name": "change vote via different callback",
+    "setup": {
+      "kv": [
+        {
+          "key": "opt:poll_chg_opt_0",
+          "value": "{\"id\":\"poll_chg_opt_0\",\"poll_id\":\"poll_chg\",\"text\":\"A\",\"position\":0}"
+        },
+        {
+          "key": "opt:poll_chg_opt_1",
+          "value": "{\"id\":\"poll_chg_opt_1\",\"poll_id\":\"poll_chg\",\"text\":\"B\",\"position\":1}"
+        }
+      ],
+      "sets": [
+        {
+          "key": "opt:poll:poll_chg",
+          "members": ["poll_chg_opt_0", "poll_chg_opt_1"]
+        }
+      ]
+    },
     "steps": [
       {
         "send": { "callback": "vote:opt:poll_chg:0", "messageId": 103 },

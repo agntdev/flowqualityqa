@@ -1,6 +1,20 @@
 [
   {
     "name": "vote callback still answered with E2T2 active",
+    "setup": {
+      "kv": [
+        {
+          "key": "opt:poll_abc_opt_0",
+          "value": "{\"id\":\"poll_abc_opt_0\",\"poll_id\":\"poll_abc\",\"text\":\"A\",\"position\":0}"
+        }
+      ],
+      "sets": [
+        {
+          "key": "opt:poll:poll_abc",
+          "members": ["poll_abc_opt_0"]
+        }
+      ]
+    },
     "steps": [
       {
         "send": { "callback": "vote:opt:poll_abc:0", "messageId": 1001 },
@@ -12,6 +26,24 @@
   },
   {
     "name": "vote change callback still answered with E2T2 active",
+    "setup": {
+      "kv": [
+        {
+          "key": "opt:poll_def_opt_0",
+          "value": "{\"id\":\"poll_def_opt_0\",\"poll_id\":\"poll_def\",\"text\":\"A\",\"position\":0}"
+        },
+        {
+          "key": "opt:poll_def_opt_1",
+          "value": "{\"id\":\"poll_def_opt_1\",\"poll_id\":\"poll_def\",\"text\":\"B\",\"position\":1}"
+        }
+      ],
+      "sets": [
+        {
+          "key": "opt:poll:poll_def",
+          "members": ["poll_def_opt_0", "poll_def_opt_1"]
+        }
+      ]
+    },
     "steps": [
       {
         "send": { "callback": "vote:opt:poll_def:1", "messageId": 1002 },

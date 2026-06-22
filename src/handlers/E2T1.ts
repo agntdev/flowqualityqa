@@ -2,9 +2,11 @@ import { Composer } from "grammy";
 import type { Ctx } from "../bot.js";
 import { VoteStore } from "../store/vote.js";
 import { PollStore } from "../store/poll.js";
+import { OptionStore } from "../store/option.js";
 
 const voteStore = new VoteStore();
 const pollStore = new PollStore();
+const optionStore = new OptionStore();
 
 const composer = new Composer<Ctx>();
 
@@ -20,6 +22,17 @@ composer.on("callback_query:data", async (ctx, next) => {
 
   const userId = ctx.from!.id;
   const optIndex = parseInt(optIndexStr, 10);
+
+  if (isNaN(optIndex) || optIndex < 0) {
+    await ctx.answerCallbackQuery({ text: "Invalid option.", show_alert: true });
+    return;
+  }
+
+  const options = await optionStore.listByPoll(pollId);
+  if (optIndex >= options.length) {
+    await ctx.answerCallbackQuery({ text: "Invalid option.", show_alert: true });
+    return;
+  }
 
   const poll = await pollStore.getById(pollId);
   if (poll && poll.is_closed) {
