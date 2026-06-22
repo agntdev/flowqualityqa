@@ -28,8 +28,8 @@ export function getRedisClient(): RedisLike | null {
 
   const url = process.env.REDIS_URL;
   if (!url) {
-    cached = null;
-    return null;
+    cached = getInMemoryClient();
+    return cached;
   }
 
   try {
@@ -42,8 +42,8 @@ export function getRedisClient(): RedisLike | null {
     cached = new Redis(url, { maxRetriesPerRequest: null, lazyConnect: false });
     return cached;
   } catch {
-    cached = null;
-    return null;
+    cached = getInMemoryClient();
+    return cached;
   }
 }
 
