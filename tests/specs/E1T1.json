@@ -1,0 +1,19 @@
+[
+  {
+    "name": "menu:poll callback initiates poll creation flow",
+    "steps": [
+      {
+        "send": { "callback": "menu:poll", "messageId": 1001 },
+        "expect": [
+          { "method": "answerCallbackQuery" },
+          {
+            "method": "editMessageText",
+            "payload": {
+              "text": "Enter a poll question:"
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

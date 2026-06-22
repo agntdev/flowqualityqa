@@ -12,6 +12,9 @@
               "reply_markup": {
                 "inline_keyboard": [
                   [
+                    { "text": "Create poll", "callback_data": "menu:poll" }
+                  ],
+                  [
                     { "text": "About", "callback_data": "menu:about" },
                     { "text": "Help", "callback_data": "menu:help" }
                   ]
