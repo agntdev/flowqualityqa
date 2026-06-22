@@ -53,7 +53,16 @@ composer.callbackQuery(/^poll:close:/, async (ctx) => {
     return;
   }
 
-  if (!matchesCreator(ctx, creatorUserId)) {
+  const chatId = ctx.callbackQuery.message?.chat.id;
+  if (chatId != null) {
+    if (!(await isAuthorized(ctx, ctx.from!.id, chatId, creatorUserId))) {
+      await ctx.answerCallbackQuery({
+        text: "Only the poll creator or a chat admin can close this poll.",
+        show_alert: true,
+      });
+      return;
+    }
+  } else if (!matchesCreator(ctx, creatorUserId)) {
     await ctx.answerCallbackQuery({
       text: "Only the poll creator or a chat admin can close this poll.",
       show_alert: true,
@@ -69,7 +78,6 @@ composer.callbackQuery(/^poll:close:/, async (ctx) => {
 
   await ctx.answerCallbackQuery();
 
-  const chatId = ctx.callbackQuery.message?.chat.id;
   if (chatId != null) {
     try {
       await ctx.api.stopPoll(chatId, pollMessageId);
