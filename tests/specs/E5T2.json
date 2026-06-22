@@ -1,6 +1,20 @@
 [
   {
     "name": "E5T2 records a vote with transactional upsert",
+    "setup": {
+      "kv": [
+        {
+          "key": "opt:poll_e5t2_a_opt_0",
+          "value": "{\"id\":\"poll_e5t2_a_opt_0\",\"poll_id\":\"poll_e5t2_a\",\"text\":\"A\",\"position\":0}"
+        }
+      ],
+      "sets": [
+        {
+          "key": "opt:poll:poll_e5t2_a",
+          "members": ["poll_e5t2_a_opt_0"]
+        }
+      ]
+    },
     "steps": [
       {
         "send": { "callback": "vote:opt:poll_e5t2_a:0", "messageId": 3001 },
@@ -12,6 +26,24 @@
   },
   {
     "name": "E5T2 handles a changed vote transactionally",
+    "setup": {
+      "kv": [
+        {
+          "key": "opt:poll_e5t2_b_opt_0",
+          "value": "{\"id\":\"poll_e5t2_b_opt_0\",\"poll_id\":\"poll_e5t2_b\",\"text\":\"A\",\"position\":0}"
+        },
+        {
+          "key": "opt:poll_e5t2_b_opt_1",
+          "value": "{\"id\":\"poll_e5t2_b_opt_1\",\"poll_id\":\"poll_e5t2_b\",\"text\":\"B\",\"position\":1}"
+        }
+      ],
+      "sets": [
+        {
+          "key": "opt:poll:poll_e5t2_b",
+          "members": ["poll_e5t2_b_opt_0", "poll_e5t2_b_opt_1"]
+        }
+      ]
+    },
     "steps": [
       {
         "send": { "callback": "vote:opt:poll_e5t2_b:0", "messageId": 3002 },
