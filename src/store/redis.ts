@@ -4,6 +4,7 @@ import { InMemoryRedis } from "./memory.js";
 export interface RedisMulti {
   get(key: string): RedisMulti;
   set(key: string, value: string): RedisMulti;
+  setnx(key: string, value: string): RedisMulti;
   del(key: string): RedisMulti;
   sadd(key: string, ...members: string[]): RedisMulti;
   srem(key: string, ...members: string[]): RedisMulti;

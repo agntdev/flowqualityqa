@@ -72,6 +72,10 @@ export class InMemoryRedis implements RedisLike {
         cmds.push({ op: "set", key, args: [value] });
         return chain;
       },
+      setnx: (key: string, value: string) => {
+        cmds.push({ op: "setnx", key, args: [value] });
+        return chain;
+      },
       del: (key: string) => {
         cmds.push({ op: "del", key, args: [] });
         return chain;
@@ -94,6 +98,16 @@ export class InMemoryRedis implements RedisLike {
             case "set":
               results.push([null, await this.set(cmd.key, cmd.args[0] ?? "")]);
               break;
+            case "setnx": {
+              const existing = await this.get(cmd.key);
+              if (existing === null) {
+                await this.set(cmd.key, cmd.args[0] ?? "");
+                results.push([null, 1]);
+              } else {
+                results.push([null, 0]);
+              }
+              break;
+            }
             case "del":
               results.push([null, await this.del(cmd.key)]);
               break;
