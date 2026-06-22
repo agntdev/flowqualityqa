@@ -160,7 +160,7 @@ composer.on("callback_query:data", async (ctx, next) => {
   ]);
   keyboardRows.push([
     inlineButton("Results", `poll:live_results:${pollId}`),
-    inlineButton("Close poll", `poll:close:${pollId}`),
+    inlineButton("Close poll", `poll:close:${poll.creator_user_id}:${poll.message_id}:${pollId}`),
   ]);
 
   const callbackMessage = ctx.callbackQuery.message;

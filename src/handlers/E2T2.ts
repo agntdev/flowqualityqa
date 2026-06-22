@@ -18,12 +18,17 @@ function escapeHtml(s: string): string {
   return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 }
 
-function buildLivePollKeyboard(pollId: string, optionCount: number) {
+function buildLivePollKeyboard(
+  pollId: string,
+  optionCount: number,
+  creatorUserId: number,
+  messageId: number,
+) {
   const rows = [];
   for (let i = 0; i < optionCount; i++) {
     rows.push([inlineButton("Vote", `vote:opt:${pollId}:${i}`)]);
   }
-  rows.push([inlineButton("Results", `poll:live_results:${pollId}`), inlineButton("Close poll", `poll:close:${pollId}`)]);
+  rows.push([inlineButton("Results", `poll:live_results:${pollId}`), inlineButton("Close poll", `poll:close:${creatorUserId}:${messageId}:${pollId}`)]);
   return inlineKeyboard(rows);
 }
 
@@ -92,7 +97,7 @@ async function tryEditPollMessage(ctx: Ctx, pollId: string) {
       text,
       {
         parse_mode: "HTML",
-        reply_markup: buildLivePollKeyboard(pollId, options.length),
+        reply_markup: buildLivePollKeyboard(pollId, options.length, poll.creator_user_id, poll.message_id),
       },
     );
   } catch {
