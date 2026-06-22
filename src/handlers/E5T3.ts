@@ -4,12 +4,6 @@ import { PollStore } from "../store/poll.js";
 import { OptionStore } from "../store/option.js";
 import { VoteStore } from "../store/vote.js";
 import { inlineKeyboard } from "../toolkit/index.js";
-import { getRedisClient, getInMemoryClient } from "../store/redis.js";
-
-const sharedRedis = getRedisClient() ?? getInMemoryClient();
-export const pollStore = new PollStore(sharedRedis);
-export const optionStore = new OptionStore(sharedRedis);
-export const voteStore = new VoteStore(sharedRedis);
 
 const composer = new Composer<Ctx>();
 
@@ -21,12 +15,15 @@ composer.on("poll", async (ctx) => {
   const pollUpdate = ctx.update.poll;
   if (!pollUpdate?.id || !pollUpdate.is_closed) return;
 
+  const pollStore = new PollStore();
   const poll = await pollStore.getById(pollUpdate.id);
   if (!poll) return;
 
+  const optionStore = new OptionStore();
   const options = await optionStore.listByPoll(poll.id);
   if (options.length === 0) return;
 
+  const voteStore = new VoteStore();
   const votes = await voteStore.listByPoll(poll.id);
   const counts = new Map<string, number>();
   for (const v of votes) {
@@ -69,6 +66,7 @@ composer.on("poll_answer", async (ctx) => {
   const answer = ctx.pollAnswer;
   if (!answer?.poll_id) return;
 
+  const pollStore = new PollStore();
   const poll = await pollStore.getById(answer.poll_id);
   if (!poll?.is_closed) return;
 
