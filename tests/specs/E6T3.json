@@ -1,0 +1,69 @@
+[
+  {
+    "name": "cast a vote via callback",
+    "steps": [
+      {
+        "send": { "callback": "vote:opt:poll_test:0", "messageId": 100 },
+        "expect": [
+          { "method": "answerCallbackQuery", "payload": { "text": "Vote recorded!" } }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "duplicate vote via same callback",
+    "steps": [
+      {
+        "send": { "callback": "vote:opt:poll_dup:0", "messageId": 101 },
+        "expect": [
+          { "method": "answerCallbackQuery", "payload": { "text": "Vote recorded!" } }
+        ]
+      },
+      {
+        "send": { "callback": "vote:opt:poll_dup:0", "messageId": 102 },
+        "expect": [
+          { "method": "answerCallbackQuery", "payload": { "text": "Vote recorded!" } }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "change vote via different callback",
+    "steps": [
+      {
+        "send": { "callback": "vote:opt:poll_chg:0", "messageId": 103 },
+        "expect": [
+          { "method": "answerCallbackQuery", "payload": { "text": "Vote recorded!" } }
+        ]
+      },
+      {
+        "send": { "callback": "vote:opt:poll_chg:1", "messageId": 104 },
+        "expect": [
+          { "method": "answerCallbackQuery", "payload": { "text": "Vote recorded!" } }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "/votestatus without poll id shows usage",
+    "steps": [
+      {
+        "send": { "text": "/votestatus" },
+        "expect": [
+          { "method": "sendMessage", "payload": { "text": "Usage: /votestatus <poll_id>" } }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "/votestatus with nonexistent poll id",
+    "steps": [
+      {
+        "send": { "text": "/votestatus nonexistent" },
+        "expect": [
+          { "method": "sendMessage", "payload": { "text": "Poll not found. Check the poll ID and try again." } }
+        ]
+      }
+    ]
+  }
+]
