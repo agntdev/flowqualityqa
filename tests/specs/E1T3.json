@@ -1,0 +1,281 @@
+[
+  {
+    "name": "show option builder after question",
+    "steps": [
+      {
+        "send": { "callback": "menu:poll", "messageId": 1001 },
+        "expect": [
+          { "method": "answerCallbackQuery" },
+          {
+            "method": "editMessageText",
+            "payload": {
+              "text": "Enter a poll question:"
+            }
+          }
+        ]
+      },
+      {
+        "send": { "text": "What is your favorite color?" },
+        "expect": [
+          {
+            "method": "sendMessage",
+            "payload": {
+              "text": "Question set. Now send the poll options."
+            }
+          }
+        ]
+      },
+      {
+        "send": { "text": "start" },
+        "expect": [
+          {
+            "method": "sendMessage",
+            "payload": {
+              "text": "<b>Poll:</b> What is your favorite color?\n<b>Type:</b> Anonymous\n\nNo options yet.\n\n0/5 options (need 2\u20135)",
+              "parse_mode": "HTML",
+              "reply_markup": {
+                "inline_keyboard": [
+                  [{ "text": "\u2795 Add option", "callback_data": "option:add" }],
+                  [{ "text": "\u{1F464} Anonymous: ON", "callback_data": "option:anon" }],
+                  [{ "text": "Cancel", "callback_data": "option:cancel" }]
+                ]
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "add option via text",
+    "steps": [
+      {
+        "send": { "callback": "menu:poll", "messageId": 1001 },
+        "expect": [
+          { "method": "answerCallbackQuery" },
+          { "method": "editMessageText", "payload": { "text": "Enter a poll question:" } }
+        ]
+      },
+      {
+        "send": { "text": "Test question?" },
+        "expect": [
+          { "method": "sendMessage", "payload": { "text": "Question set. Now send the poll options." } }
+        ]
+      },
+      {
+        "send": { "text": "show" },
+        "expect": [
+          { "method": "sendMessage", "payload": { "text": "<b>Poll:</b> Test question?\n<b>Type:</b> Anonymous\n\nNo options yet.\n\n0/5 options (need 2\u20135)" } }
+        ]
+      },
+      {
+        "send": { "callback": "option:add", "messageId": 1003 },
+        "expect": [
+          { "method": "answerCallbackQuery" },
+          { "method": "editMessageText", "payload": { "text": "Enter option 1:" } }
+        ]
+      },
+      {
+        "send": { "text": "Red" },
+        "expect": [
+          {
+            "method": "editMessageText",
+            "payload": {
+              "text": "<b>Poll:</b> Test question?\n<b>Type:</b> Anonymous\n\n<b>Options:</b>\n  1. Red\n\n1/5 options (need 2\u20135)"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "reject empty option",
+    "steps": [
+      {
+        "send": { "callback": "menu:poll", "messageId": 1001 },
+        "expect": [
+          { "method": "answerCallbackQuery" },
+          { "method": "editMessageText", "payload": { "text": "Enter a poll question:" } }
+        ]
+      },
+      {
+        "send": { "text": "Q?" },
+        "expect": [
+          { "method": "sendMessage", "payload": { "text": "Question set. Now send the poll options." } }
+        ]
+      },
+      {
+        "send": { "text": "go" },
+        "expect": [
+          { "method": "sendMessage" }
+        ]
+      },
+      {
+        "send": { "callback": "option:add", "messageId": 1003 },
+        "expect": [
+          { "method": "answerCallbackQuery" },
+          { "method": "editMessageText", "payload": { "text": "Enter option 1:" } }
+        ]
+      },
+      {
+        "send": { "text": "   " },
+        "expect": [
+          {
+            "method": "sendMessage",
+            "payload": {
+              "text": "Option cannot be empty. Please enter a non-empty option:"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "toggle anonymous",
+    "steps": [
+      {
+        "send": { "callback": "menu:poll", "messageId": 1001 },
+        "expect": [
+          { "method": "answerCallbackQuery" },
+          { "method": "editMessageText", "payload": { "text": "Enter a poll question:" } }
+        ]
+      },
+      {
+        "send": { "text": "Q?" },
+        "expect": [
+          { "method": "sendMessage", "payload": { "text": "Question set. Now send the poll options." } }
+        ]
+      },
+      {
+        "send": { "text": "show" },
+        "expect": [
+          {
+            "method": "sendMessage",
+            "payload": {
+              "text": "<b>Poll:</b> Q?\n<b>Type:</b> Anonymous\n\nNo options yet.\n\n0/5 options (need 2\u20135)",
+              "reply_markup": {
+                "inline_keyboard": [
+                  [{ "text": "\u2795 Add option", "callback_data": "option:add" }],
+                  [{ "text": "\u{1F464} Anonymous: ON", "callback_data": "option:anon" }],
+                  [{ "text": "Cancel", "callback_data": "option:cancel" }]
+                ]
+              }
+            }
+          }
+        ]
+      },
+      {
+        "send": { "callback": "option:anon", "messageId": 1003 },
+        "expect": [
+          { "method": "answerCallbackQuery" },
+          {
+            "method": "editMessageText",
+            "payload": {
+              "text": "<b>Poll:</b> Q?\n<b>Type:</b> Public\n\nNo options yet.\n\n0/5 options (need 2\u20135)",
+              "reply_markup": {
+                "inline_keyboard": [
+                  [{ "text": "\u2795 Add option", "callback_data": "option:add" }],
+                  [{ "text": "\u{1F464} Anonymous: OFF", "callback_data": "option:anon" }],
+                  [{ "text": "Cancel", "callback_data": "option:cancel" }]
+                ]
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "cancel poll creation",
+    "steps": [
+      {
+        "send": { "callback": "menu:poll", "messageId": 1001 },
+        "expect": [
+          { "method": "answerCallbackQuery" },
+          { "method": "editMessageText", "payload": { "text": "Enter a poll question:" } }
+        ]
+      },
+      {
+        "send": { "text": "Q?" },
+        "expect": [
+          { "method": "sendMessage", "payload": { "text": "Question set. Now send the poll options." } }
+        ]
+      },
+      {
+        "send": { "text": "show" },
+        "expect": [
+          { "method": "sendMessage", "payload": { "text": "<b>Poll:</b> Q?\n<b>Type:</b> Anonymous\n\nNo options yet.\n\n0/5 options (need 2\u20135)" } }
+        ]
+      },
+      {
+        "send": { "callback": "option:cancel", "messageId": 1003 },
+        "expect": [
+          { "method": "answerCallbackQuery" },
+          { "method": "editMessageText", "payload": { "text": "Poll creation cancelled." } }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "done with valid options shows summary",
+    "steps": [
+      {
+        "send": { "callback": "menu:poll", "messageId": 1001 },
+        "expect": [
+          { "method": "answerCallbackQuery" },
+          { "method": "editMessageText", "payload": { "text": "Enter a poll question:" } }
+        ]
+      },
+      {
+        "send": { "text": "Q?" },
+        "expect": [
+          { "method": "sendMessage", "payload": { "text": "Question set. Now send the poll options." } }
+        ]
+      },
+      {
+        "send": { "text": "show" },
+        "expect": [
+          { "method": "sendMessage" }
+        ]
+      },
+      {
+        "send": { "callback": "option:add", "messageId": 1003 },
+        "expect": [
+          { "method": "answerCallbackQuery" },
+          { "method": "editMessageText", "payload": { "text": "Enter option 1:" } }
+        ]
+      },
+      {
+        "send": { "text": "A" },
+        "expect": [
+          { "method": "editMessageText" }
+        ]
+      },
+      {
+        "send": { "callback": "option:add", "messageId": 1003 },
+        "expect": [
+          { "method": "answerCallbackQuery" },
+          { "method": "editMessageText", "payload": { "text": "Enter option 2:" } }
+        ]
+      },
+      {
+        "send": { "text": "B" },
+        "expect": [
+          { "method": "editMessageText" }
+        ]
+      },
+      {
+        "send": { "callback": "option:done", "messageId": 1003 },
+        "expect": [
+          { "method": "answerCallbackQuery" },
+          {
+            "method": "editMessageText",
+            "payload": {
+              "text": "<b>\u2705 Poll created!</b>\n\n<b>Question:</b> Q?\n<b>Type:</b> Anonymous\n\n<b>Options:</b>\n  1. A\n  2. B\n"
+            }
+          }
+        ]
+      }
+    ]
+  }
+]
