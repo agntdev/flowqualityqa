@@ -1,0 +1,24 @@
+[
+  {
+    "name": "export with empty poll ID",
+    "steps": [
+      {
+        "send": { "callback": "poll:export:", "messageId": 1001 },
+        "expect": [
+          { "method": "answerCallbackQuery" }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "export non-existent poll",
+    "steps": [
+      {
+        "send": { "callback": "poll:export:poll_1_1014", "messageId": 1001 },
+        "expect": [
+          { "method": "answerCallbackQuery", "payload": { "text": "Poll not found.", "show_alert": true } }
+        ]
+      }
+    ]
+  }
+]
