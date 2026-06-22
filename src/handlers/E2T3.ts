@@ -85,9 +85,14 @@ composer.on("callback_query:data", async (ctx, next) => {
       const chatId =
         ctx.callbackQuery.message?.chat.id ?? poll.chat_id;
 
+      const names = await Promise.all(
+        voterIds.slice(0, showCount).map((uid) =>
+          resolveVoterName(ctx, chatId, uid),
+        ),
+      );
+
       for (let i = 0; i < showCount; i++) {
-        const name = await resolveVoterName(ctx, chatId, voterIds[i]);
-        text += `  ${i + 1}. ${escapeHtml(name)}\n`;
+        text += `  ${i + 1}. ${escapeHtml(names[i])}\n`;
       }
 
       if (voterIds.length > MAX_VOTERS_SHOWN) {
