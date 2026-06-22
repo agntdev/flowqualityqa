@@ -4,6 +4,10 @@
     "setup": {
       "kv": [
         {
+          "key": "poll:poll_abc",
+          "value": "{\"id\":\"poll_abc\",\"chat_id\":1,\"message_id\":1001,\"creator_user_id\":1,\"question\":\"Test?\",\"is_anonymous\":true,\"is_closed\":false,\"created_at\":\"2024-01-01T00:00:00Z\",\"closed_at\":null}"
+        },
+        {
           "key": "opt:poll_abc_opt_0",
           "value": "{\"id\":\"poll_abc_opt_0\",\"poll_id\":\"poll_abc\",\"text\":\"A\",\"position\":0}"
         }
@@ -28,6 +32,10 @@
     "name": "vote change callback still answered with E2T2 active",
     "setup": {
       "kv": [
+        {
+          "key": "poll:poll_def",
+          "value": "{\"id\":\"poll_def\",\"chat_id\":1,\"message_id\":1001,\"creator_user_id\":1,\"question\":\"Test?\",\"is_anonymous\":true,\"is_closed\":false,\"created_at\":\"2024-01-01T00:00:00Z\",\"closed_at\":null}"
+        },
         {
           "key": "opt:poll_def_opt_0",
           "value": "{\"id\":\"poll_def_opt_0\",\"poll_id\":\"poll_def\",\"text\":\"A\",\"position\":0}"
