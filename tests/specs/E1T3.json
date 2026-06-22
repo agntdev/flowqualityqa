@@ -217,7 +217,7 @@
     ]
   },
   {
-    "name": "done with valid options shows summary",
+    "name": "done with valid options shows preview",
     "steps": [
       {
         "send": { "callback": "menu:poll", "messageId": 1001 },
@@ -271,7 +271,16 @@
           {
             "method": "editMessageText",
             "payload": {
-              "text": "<b>\u2705 Poll created!</b>\n\n<b>Question:</b> Q?\n<b>Type:</b> Anonymous\n\n<b>Options:</b>\n  1. A\n  2. B\n"
+              "text": "<b>\u{1F4CB} Poll Preview</b>\n\n<b>Question:</b> Q?\n<b>Type:</b> Anonymous\n\n<b>Options:</b>\n  1. A\n  2. B\n",
+              "parse_mode": "HTML",
+              "reply_markup": {
+                "inline_keyboard": [
+                  [{ "text": "\u{1F4E4} Post poll", "callback_data": "poll:post" }],
+                  [{ "text": "\u270F\uFE0F Edit options", "callback_data": "poll:edit" }],
+                  [{ "text": "\u{1F464} Anonymous: ON", "callback_data": "poll:anon" }],
+                  [{ "text": "Cancel", "callback_data": "poll:cancel" }]
+                ]
+              }
             }
           }
         ]

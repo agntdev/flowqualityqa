@@ -1,6 +1,7 @@
 import { Composer } from "grammy";
 import type { Ctx } from "../bot.js";
 import { inlineKeyboard, inlineButton } from "../toolkit/index.js";
+import { buildPreviewText, buildPreviewKeyboard } from "./E1T4.js";
 
 const composer = new Composer<Ctx>();
 
@@ -8,7 +9,7 @@ function escapeHtml(s: string): string {
   return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 }
 
-function buildOptionsText(question: string, options: string[], anonymous: boolean): string {
+export function buildOptionsText(question: string, options: string[], anonymous: boolean): string {
   const type = anonymous ? "Anonymous" : "Public";
   let text = `<b>Poll:</b> ${escapeHtml(question)}\n`;
   text += `<b>Type:</b> ${type}\n\n`;
@@ -24,7 +25,7 @@ function buildOptionsText(question: string, options: string[], anonymous: boolea
   return text;
 }
 
-function buildOptionsKeyboard(options: string[], anonymous: boolean) {
+export function buildOptionsKeyboard(options: string[], anonymous: boolean) {
   const rows: ReturnType<typeof inlineButton>[][] = [];
 
   rows.push([inlineButton("\u2795 Add option", "option:add")]);
@@ -153,19 +154,15 @@ composer.callbackQuery("option:done", async (ctx) => {
   await ctx.answerCallbackQuery();
 
   const anonymous = poll.anonymous ?? true;
-  const type = anonymous ? "Anonymous" : "Public";
-  let summary = "<b>\u2705 Poll created!</b>\n\n";
-  summary += `<b>Question:</b> ${escapeHtml(poll.question)}\n`;
-  summary += `<b>Type:</b> ${type}\n\n`;
-  summary += "<b>Options:</b>\n";
-  for (let i = 0; i < options.length; i++) {
-    summary += `  ${i + 1}. ${escapeHtml(options[i])}\n`;
-  }
+  const previewText = buildPreviewText(poll.question, options, anonymous);
+  const previewKb = buildPreviewKeyboard(anonymous);
 
-  await ctx.editMessageText(summary, { parse_mode: "HTML" });
+  await ctx.editMessageText(previewText, {
+    parse_mode: "HTML",
+    reply_markup: previewKb,
+  });
 
-  ctx.session.step = undefined;
-  ctx.session.poll = undefined;
+  ctx.session.step = "previewing";
 });
 
 composer.callbackQuery("option:anon", async (ctx) => {
