@@ -1,6 +1,40 @@
 [
   {
     "name": "native poll close updates message and removes vote buttons",
+    "setup": {
+      "kv": [
+        {
+          "key": "poll:poll_closed_1",
+          "value": "{\"id\":\"poll_closed_1\",\"chat_id\":1,\"message_id\":1001,\"creator_user_id\":1,\"question\":\"Test?\",\"is_anonymous\":true,\"is_closed\":false,\"created_at\":\"2024-01-01T00:00:00Z\",\"closed_at\":null}"
+        },
+        {
+          "key": "opt:poll_closed_1_opt_0",
+          "value": "{\"id\":\"poll_closed_1_opt_0\",\"poll_id\":\"poll_closed_1\",\"text\":\"A\",\"position\":0}"
+        },
+        {
+          "key": "opt:poll_closed_1_opt_1",
+          "value": "{\"id\":\"poll_closed_1_opt_1\",\"poll_id\":\"poll_closed_1\",\"text\":\"B\",\"position\":1}"
+        },
+        {
+          "key": "vote:vote_poll_closed_1_789_0",
+          "value": "{\"id\":\"vote_poll_closed_1_789_0\",\"poll_id\":\"poll_closed_1\",\"user_id\":789,\"option_id\":\"poll_closed_1_opt_0\",\"created_at\":\"2024-01-01T00:00:00Z\"}"
+        }
+      ],
+      "sets": [
+        {
+          "key": "poll:chat:1",
+          "members": ["poll_closed_1"]
+        },
+        {
+          "key": "opt:poll:poll_closed_1",
+          "members": ["poll_closed_1_opt_0", "poll_closed_1_opt_1"]
+        },
+        {
+          "key": "vote:poll:poll_closed_1",
+          "members": ["vote_poll_closed_1_789_0"]
+        }
+      ]
+    },
     "steps": [
       {
         "send": {
@@ -10,7 +44,7 @@
               "id": "poll_closed_1",
               "question": "Test?",
               "is_closed": true,
-              "options": [{ "text": "A" }, { "text": "B" }],
+              "options": [{"text": "A"}, {"text": "B"}],
               "total_voter_count": 0,
               "is_anonymous": true,
               "type": "regular",
@@ -18,12 +52,36 @@
             }
           }
         },
-        "expect": []
+        "expect": [
+          {
+            "method": "editMessageText",
+            "payload": {
+              "chat_id": 1,
+              "message_id": 1001,
+              "parse_mode": "HTML",
+              "reply_markup": {"inline_keyboard": []}
+            }
+          }
+        ]
       }
     ]
   },
   {
     "name": "vote on closed poll via poll_answer shows closed message",
+    "setup": {
+      "kv": [
+        {
+          "key": "poll:poll_closed_2",
+          "value": "{\"id\":\"poll_closed_2\",\"chat_id\":2,\"message_id\":1002,\"creator_user_id\":2,\"question\":\"Test?\",\"is_anonymous\":true,\"is_closed\":true,\"created_at\":\"2024-01-01T00:00:00Z\",\"closed_at\":\"2024-01-01T00:00:00Z\"}"
+        }
+      ],
+      "sets": [
+        {
+          "key": "poll:chat:2",
+          "members": ["poll_closed_2"]
+        }
+      ]
+    },
     "steps": [
       {
         "send": {
@@ -31,13 +89,21 @@
             "update_id": 11,
             "poll_answer": {
               "poll_id": "poll_closed_2",
-              "voter_chat": { "id": 789, "type": "private" },
-              "user": { "id": 789, "is_bot": false, "first_name": "Voter" },
+              "voter_chat": {"id": 789, "type": "private"},
+              "user": {"id": 789, "is_bot": false, "first_name": "Voter"},
               "option_ids": [0]
             }
           }
         },
-        "expect": []
+        "expect": [
+          {
+            "method": "sendMessage",
+            "payload": {
+              "chat_id": 789,
+              "text": "Poll is closed"
+            }
+          }
+        ]
       }
     ]
   }

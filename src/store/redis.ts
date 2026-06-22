@@ -1,4 +1,5 @@
 import { createRequire } from "node:module";
+import { InMemoryRedis } from "./memory.js";
 
 export interface RedisMulti {
   get(key: string): RedisMulti;
@@ -44,4 +45,13 @@ export function getRedisClient(): RedisLike | null {
     cached = null;
     return null;
   }
+}
+
+let inMemoryClient: InMemoryRedis | undefined;
+
+export function getInMemoryClient(): InMemoryRedis {
+  if (!inMemoryClient) {
+    inMemoryClient = new InMemoryRedis();
+  }
+  return inMemoryClient;
 }

@@ -31,6 +31,23 @@ export interface SpecStep {
   expect: ExpectedCall[];
 }
 
+export interface RedisSetupEntry {
+  key: string;
+  value: string;
+}
+
+export interface RedisSetupSetEntry {
+  key: string;
+  members: string[];
+}
+
+export interface SpecSetup {
+  /** Key-value pairs to pre-populate in Redis before test steps. */
+  kv?: RedisSetupEntry[];
+  /** Set entries to pre-populate in Redis before test steps. */
+  sets?: RedisSetupSetEntry[];
+}
+
 export interface BotSpec {
   name: string;
   /**
@@ -41,6 +58,8 @@ export interface BotSpec {
    * guarantee lives in "all existing specs still green", not in per-spec strict.
    */
   strict?: boolean;
+  /** Optional setup to pre-populate persistent storage before test steps run. */
+  setup?: SpecSetup;
   steps: SpecStep[];
 }
 

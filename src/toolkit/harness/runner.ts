@@ -8,6 +8,34 @@ import type {
   SpecResult,
   StepResult,
 } from "./types.js";
+import { getInMemoryClient } from "../../store/redis.js";
+
+async function runSetup(spec: BotSpec): Promise<void> {
+  const setup = spec.setup;
+  if (!setup) return;
+
+  try {
+    const client = getInMemoryClient();
+    console.log("[runSetup] got client, kv entries:", setup.kv?.length ?? 0, "set entries:", setup.sets?.length ?? 0);
+
+    if (setup.kv) {
+      for (const entry of setup.kv) {
+        await client.set(entry.key, entry.value);
+        console.log("[runSetup] set", entry.key);
+      }
+    }
+    if (setup.sets) {
+      for (const entry of setup.sets) {
+        for (const member of entry.members) {
+          await client.sadd(entry.key, member);
+          console.log("[runSetup] sadd", entry.key, member);
+        }
+      }
+    }
+  } catch (e) {
+    console.error("[runSetup] error:", e);
+  }
+}
 
 // Tokenless replay: build the bot in-process, set a fake botInfo so grammY never
 // calls getMe, install a transformer that CAPTURES every outgoing call and
@@ -138,6 +166,8 @@ export async function runSpec(bot: Bot<any>, spec: BotSpec): Promise<SpecResult>
     >;
   };
   bot.api.config.use(capture);
+
+  await runSetup(spec);
 
   // grammY's handleUpdate RETHROWS handler errors (bot.catch only guards the
   // polling/webhook layer), so we trap them here to surface red-test reasons.

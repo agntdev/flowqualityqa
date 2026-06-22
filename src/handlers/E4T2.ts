@@ -6,7 +6,7 @@ const store = new OptionStore();
 
 const composer = new Composer<Ctx>();
 
-composer.on("poll", async (ctx) => {
+composer.on("poll", async (ctx, next) => {
   const poll = ctx.update.poll;
   if (!poll || !poll.id) return;
 
@@ -28,6 +28,8 @@ composer.on("poll", async (ctx) => {
 
     await store.create(option);
   }
+
+  await next();
 });
 
 export default composer;
