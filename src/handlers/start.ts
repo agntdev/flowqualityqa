@@ -11,6 +11,7 @@ Use the menu below to get started.`;
 composer.command("start", async (ctx) => {
   await ctx.reply(WELCOME, {
     reply_markup: inlineKeyboard([
+      [inlineButton("Create poll", "menu:poll")],
       [inlineButton("About", "menu:about"), inlineButton("Help", "menu:help")],
     ]),
   });
