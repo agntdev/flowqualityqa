@@ -64,7 +64,18 @@
         "expect": [
           { "method": "answerCallbackQuery" },
           { "method": "sendPoll", "payload": { "question": "Q?", "options": [{ "text": "A" }, { "text": "B" }] } },
-          { "method": "editMessageText", "payload": { "text": "\u2705 Poll posted!" } }
+          {
+            "method": "editMessageText",
+            "payload": {
+              "text": "\u2705 Poll posted!",
+              "reply_markup": {
+                "inline_keyboard": [
+                  [{ "text": "Close poll", "callback_data": "poll:close:1:1014:poll_1_1014" }],
+                  [{ "text": "Export", "callback_data": "poll:export:poll_1_1014" }]
+                ]
+              }
+            }
+          }
         ]
       }
     ]

@@ -87,6 +87,7 @@ composer.callbackQuery("poll:post", async (ctx) => {
   await ctx.editMessageText("\u2705 Poll posted!", {
     reply_markup: inlineKeyboard([
       [inlineButton("Close poll", `poll:close:${ctx.from!.id}:${sent.message_id}:${pollId}`)],
+      [inlineButton("Export", `poll:export:${pollId}`)],
     ]),
   });
 
