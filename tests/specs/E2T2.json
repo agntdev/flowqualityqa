@@ -1,0 +1,43 @@
+[
+  {
+    "name": "vote callback still answered with E2T2 active",
+    "steps": [
+      {
+        "send": { "callback": "vote:opt:poll_abc:0", "messageId": 1001 },
+        "expect": [
+          { "method": "answerCallbackQuery", "payload": { "text": "Vote recorded!" } }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "vote change callback still answered with E2T2 active",
+    "steps": [
+      {
+        "send": { "callback": "vote:opt:poll_def:1", "messageId": 1002 },
+        "expect": [
+          { "method": "answerCallbackQuery", "payload": { "text": "Vote recorded!" } }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "poll_answer does not crash with E2T2 active",
+    "steps": [
+      {
+        "send": {
+          "update": {
+            "update_id": 3,
+            "poll_answer": {
+              "poll_id": "test_poll_1",
+              "voter_chat": { "id": 456, "type": "private" },
+              "user": { "id": 456, "is_bot": false, "first_name": "Voter" },
+              "option_ids": [0]
+            }
+          }
+        },
+        "expect": []
+      }
+    ]
+  }
+]
