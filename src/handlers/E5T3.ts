@@ -11,8 +11,6 @@ export const pollStore = new PollStore(sharedRedis);
 export const optionStore = new OptionStore(sharedRedis);
 export const voteStore = new VoteStore(sharedRedis);
 
-console.log("[E5T3] module loaded, sharedRedis:", sharedRedis === null ? "null" : "present");
-
 const composer = new Composer<Ctx>();
 
 function escapeHtml(s: string): string {
@@ -21,15 +19,12 @@ function escapeHtml(s: string): string {
 
 composer.on("poll", async (ctx) => {
   const pollUpdate = ctx.update.poll;
-  console.log("[E5T3 poll] update received, id:", pollUpdate?.id, "is_closed:", pollUpdate?.is_closed);
   if (!pollUpdate?.id || !pollUpdate.is_closed) return;
 
   const poll = await pollStore.getById(pollUpdate.id);
-  console.log("[E5T3 poll] poll from store:", poll ? JSON.stringify({ id: poll.id, chat_id: poll.chat_id, message_id: poll.message_id }) : null);
   if (!poll) return;
 
   const options = await optionStore.listByPoll(poll.id);
-  console.log("[E5T3 poll] options count:", options.length);
   if (options.length === 0) return;
 
   const votes = await voteStore.listByPoll(poll.id);
@@ -75,7 +70,6 @@ composer.on("poll_answer", async (ctx) => {
   if (!answer?.poll_id) return;
 
   const poll = await pollStore.getById(answer.poll_id);
-  console.log("[E5T3 poll_answer] poll_id:", answer.poll_id, "poll from store:", poll ? JSON.stringify({ id: poll.id, is_closed: poll.is_closed }) : null);
   if (!poll?.is_closed) return;
 
   const user = answer.user ?? answer.voter_chat;
