@@ -1,5 +1,14 @@
 import { createRequire } from "node:module";
 
+export interface RedisMulti {
+  get(key: string): RedisMulti;
+  set(key: string, value: string): RedisMulti;
+  del(key: string): RedisMulti;
+  sadd(key: string, ...members: string[]): RedisMulti;
+  srem(key: string, ...members: string[]): RedisMulti;
+  exec(): Promise<Array<[Error | null, unknown]>>;
+}
+
 export interface RedisLike {
   get(key: string): Promise<string | null>;
   set(key: string, value: string): Promise<unknown>;
@@ -8,6 +17,7 @@ export interface RedisLike {
   smembers(key: string): Promise<string[]>;
   srem(key: string, ...members: string[]): Promise<number>;
   keys(pattern: string): Promise<string[]>;
+  multi(): RedisMulti;
 }
 
 let cached: RedisLike | null | undefined;
