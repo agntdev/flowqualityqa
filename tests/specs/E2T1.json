@@ -1,0 +1,24 @@
+[
+  {
+    "name": "record a vote via callback",
+    "steps": [
+      {
+        "send": { "callback": "vote:opt:poll_abc:0", "messageId": 1001 },
+        "expect": [
+          { "method": "answerCallbackQuery", "payload": { "text": "Vote recorded!" } }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "change vote via callback",
+    "steps": [
+      {
+        "send": { "callback": "vote:opt:poll_abc:1", "messageId": 1002 },
+        "expect": [
+          { "method": "answerCallbackQuery", "payload": { "text": "Vote recorded!" } }
+        ]
+      }
+    ]
+  }
+]
