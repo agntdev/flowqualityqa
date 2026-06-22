@@ -1,0 +1,194 @@
+[
+  {
+    "name": "/csvcheck anonymous with valid CSV passes validation",
+    "steps": [
+      {
+        "send": { "text": "/csvcheck anonymous" },
+        "expect": [
+          { "method": "sendMessage", "payload": { "text": "Send the CSV to validate (expected format: Option,Votes):" } }
+        ]
+      },
+      {
+        "send": { "text": "Option,Votes\nRed,2\nGreen,1\nBlue,0" },
+        "expect": [
+          { "method": "sendMessage", "payload": { "text": "CSV format is valid for anonymous poll." } }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "/csvcheck public with valid CSV passes validation",
+    "steps": [
+      {
+        "send": { "text": "/csvcheck public" },
+        "expect": [
+          { "method": "sendMessage", "payload": { "text": "Send the CSV to validate (expected format: Option,Votes,Voter):" } }
+        ]
+      },
+      {
+        "send": { "text": "Option,Votes,Voter\nRed,1,123\nGreen,1,456" },
+        "expect": [
+          { "method": "sendMessage", "payload": { "text": "CSV format is valid for public poll." } }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "/csvcheck anonymous rejects wrong header",
+    "steps": [
+      {
+        "send": { "text": "/csvcheck anonymous" },
+        "expect": [
+          { "method": "sendMessage", "payload": { "text": "Send the CSV to validate (expected format: Option,Votes):" } }
+        ]
+      },
+      {
+        "send": { "text": "Wrong,Header\nRed,2\nGreen,1" },
+        "expect": [
+          { "method": "sendMessage", "payload": { "text": "CSV format is invalid for anonymous poll:\nExpected header \"Option,Votes\" but got \"Wrong,Header\"" } }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "/csvcheck public rejects wrong header",
+    "steps": [
+      {
+        "send": { "text": "/csvcheck public" },
+        "expect": [
+          { "method": "sendMessage", "payload": { "text": "Send the CSV to validate (expected format: Option,Votes,Voter):" } }
+        ]
+      },
+      {
+        "send": { "text": "Option,Votes\nRed,1,123" },
+        "expect": [
+          { "method": "sendMessage", "payload": { "text": "CSV format is invalid for public poll:\nExpected header \"Option,Votes,Voter\" but got \"Option,Votes\"" } }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "/csvcheck anonymous rejects wrong column count",
+    "steps": [
+      {
+        "send": { "text": "/csvcheck anonymous" },
+        "expect": [
+          { "method": "sendMessage", "payload": { "text": "Send the CSV to validate (expected format: Option,Votes):" } }
+        ]
+      },
+      {
+        "send": { "text": "Option,Votes\nRed,2,extra" },
+        "expect": [
+          { "method": "sendMessage", "payload": { "text": "CSV format is invalid for anonymous poll:\nRow 1: expected 2 columns but got 3" } }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "/csvcheck public rejects non-numeric voter",
+    "steps": [
+      {
+        "send": { "text": "/csvcheck public" },
+        "expect": [
+          { "method": "sendMessage", "payload": { "text": "Send the CSV to validate (expected format: Option,Votes,Voter):" } }
+        ]
+      },
+      {
+        "send": { "text": "Option,Votes,Voter\nRed,1,abc" },
+        "expect": [
+          { "method": "sendMessage", "payload": { "text": "CSV format is invalid for public poll:\nRow 1: voter ID must be a non-negative integer, got \"abc\"" } }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "/csvcheck anonymous rejects non-numeric votes",
+    "steps": [
+      {
+        "send": { "text": "/csvcheck anonymous" },
+        "expect": [
+          { "method": "sendMessage", "payload": { "text": "Send the CSV to validate (expected format: Option,Votes):" } }
+        ]
+      },
+      {
+        "send": { "text": "Option,Votes\nRed,two" },
+        "expect": [
+          { "method": "sendMessage", "payload": { "text": "CSV format is invalid for anonymous poll:\nRow 1: vote count must be a non-negative integer, got \"two\"" } }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "/csvcheck public rejects non-one vote value",
+    "steps": [
+      {
+        "send": { "text": "/csvcheck public" },
+        "expect": [
+          { "method": "sendMessage", "payload": { "text": "Send the CSV to validate (expected format: Option,Votes,Voter):" } }
+        ]
+      },
+      {
+        "send": { "text": "Option,Votes,Voter\nRed,2,123" },
+        "expect": [
+          { "method": "sendMessage", "payload": { "text": "CSV format is invalid for public poll:\nRow 1: vote column must be \"1\" for public polls, got \"2\"" } }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "/csvcheck without argument shows usage",
+    "steps": [
+      {
+        "send": { "text": "/csvcheck" },
+        "expect": [
+          { "method": "sendMessage", "payload": { "text": "Usage: /csvcheck anonymous|public\n\nTells the bot which poll type to validate against. Then send the CSV content." } }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "/csvcheck with invalid argument shows usage",
+    "steps": [
+      {
+        "send": { "text": "/csvcheck invalid" },
+        "expect": [
+          { "method": "sendMessage", "payload": { "text": "Usage: /csvcheck anonymous|public\n\nTells the bot which poll type to validate against. Then send the CSV content." } }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "/csvcheck anonymous validates CSV with quoted fields",
+    "steps": [
+      {
+        "send": { "text": "/csvcheck anonymous" },
+        "expect": [
+          { "method": "sendMessage", "payload": { "text": "Send the CSV to validate (expected format: Option,Votes):" } }
+        ]
+      },
+      {
+        "send": { "text": "Option,Votes\n\"Red, Blue\",2\nGreen,1" },
+        "expect": [
+          { "method": "sendMessage", "payload": { "text": "CSV format is valid for anonymous poll." } }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "/csvcheck anonymous with no data rows is valid",
+    "steps": [
+      {
+        "send": { "text": "/csvcheck anonymous" },
+        "expect": [
+          { "method": "sendMessage", "payload": { "text": "Send the CSV to validate (expected format: Option,Votes):" } }
+        ]
+      },
+      {
+        "send": { "text": "Option,Votes" },
+        "expect": [
+          { "method": "sendMessage", "payload": { "text": "CSV format is valid for anonymous poll." } }
+        ]
+      }
+    ]
+  }
+]
