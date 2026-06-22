@@ -27,13 +27,15 @@ function buildOptionsText(question: string, options: string[], anonymous: boolea
 function buildOptionsKeyboard(options: string[], anonymous: boolean) {
   const rows: ReturnType<typeof inlineButton>[][] = [];
 
-  rows.push([inlineButton("\u2795 Add option", "option:add")]);
-
-  if (options.length >= 2) {
-    rows.push([inlineButton("\u2705 Done", "option:done")]);
+  if (options.length < 5) {
+    rows.push([inlineButton("Add option", "option:add")]);
   }
 
-  const anonLabel = anonymous ? "\u{1F464} Anonymous: ON" : "\u{1F464} Anonymous: OFF";
+  if (options.length >= 2) {
+    rows.push([inlineButton("Done", "option:done")]);
+  }
+
+  const anonLabel = anonymous ? "Anonymous: ON" : "Anonymous: OFF";
   rows.push([inlineButton(anonLabel, "option:anon")]);
   rows.push([inlineButton("Cancel", "option:cancel")]);
 
@@ -49,76 +51,72 @@ async function showBuilder(ctx: Ctx, poll: NonNullable<Ctx["session"]["poll"]>) 
     reply_markup: buildOptionsKeyboard(options, anonymous),
   });
 
-  (poll as Record<string, unknown>).builderMessageId = msg.message_id;
-  (poll as Record<string, unknown>).builderChatId = msg.chat.id;
+  poll.builderMessageId = msg.message_id;
+  poll.builderChatId = msg.chat.id;
 }
 
 async function editBuilder(ctx: Ctx) {
-  const poll = ctx.session.poll as Record<string, unknown> | undefined;
-  if (!poll || typeof poll.question !== "string") return;
+  const poll = ctx.session.poll;
+  if (!poll?.question) return;
 
-  const msgId = poll.builderMessageId as number | undefined;
-  const chatId = poll.builderChatId as number | undefined;
+  const msgId = poll.builderMessageId;
+  const chatId = poll.builderChatId;
   if (!msgId || !chatId) return;
 
-  const options = (poll.options ?? []) as string[];
-  const anonymous = (poll.anonymous ?? true) as boolean;
+  const options = poll.options ?? [];
+  const anonymous = poll.anonymous ?? true;
 
-  await ctx.api.editMessageText(
-    chatId,
-    msgId,
-    buildOptionsText(poll.question as string, options, anonymous),
-    {
-      parse_mode: "HTML",
-      reply_markup: buildOptionsKeyboard(options, anonymous),
-    },
-  );
+  try {
+    await ctx.api.editMessageText(
+      chatId,
+      msgId,
+      buildOptionsText(poll.question, options, anonymous),
+      {
+        parse_mode: "HTML",
+        reply_markup: buildOptionsKeyboard(options, anonymous),
+      },
+    );
+  } catch {
+    await showBuilder(ctx, poll);
+  }
 }
 
 composer.on("message:text", async (ctx, next) => {
-  if (ctx.session.step !== "awaiting_poll_options") return next();
-  const poll = ctx.session.poll;
-  if (!poll?.question) return next();
-  if ((poll as Record<string, unknown>).builderMessageId) return next();
-
-  await showBuilder(ctx, poll);
-});
-
-composer.on("message:text", async (ctx, next) => {
+  if (ctx.session.step === "awaiting_poll_options") {
+    ctx.session.step = "awaiting_option_text";
+  }
   if (ctx.session.step !== "awaiting_option_text") return next();
 
-  const poll = ctx.session.poll as Record<string, unknown> | undefined;
-  if (!poll || typeof poll.question !== "string") return next();
+  const poll = ctx.session.poll;
+  if (!poll?.question) return next();
 
   const text = ctx.message.text.trim();
+  if (text.startsWith("/")) return next();
 
   if (!text) {
     await ctx.reply("Option cannot be empty. Please enter a non-empty option:");
     return;
   }
 
-  const options = (poll.options ?? []) as string[];
+  const options = poll.options ?? [];
   if (options.length >= 5) {
-    ctx.session.step = "awaiting_poll_options";
+    await ctx.reply("This poll already has 5 options. Tap Done or Cancel.");
     await editBuilder(ctx);
-    return;
-  }
-
-  const lower = text.toLowerCase();
-  if (options.some((o: string) => o.toLowerCase() === lower)) {
-    await ctx.reply("This option already exists. Please enter a different option:");
     return;
   }
 
   options.push(text);
   poll.options = options;
-  ctx.session.step = "awaiting_poll_options";
 
-  await editBuilder(ctx);
+  if (poll.builderMessageId) {
+    await editBuilder(ctx);
+  } else {
+    await showBuilder(ctx, poll);
+  }
 });
 
 composer.callbackQuery("option:add", async (ctx) => {
-  const options = (ctx.session.poll?.options ?? []) as string[];
+  const options = ctx.session.poll?.options ?? [];
 
   if (options.length >= 5) {
     await ctx.answerCallbackQuery({ text: "Maximum 5 options.", show_alert: true });
@@ -129,8 +127,8 @@ composer.callbackQuery("option:add", async (ctx) => {
   ctx.session.step = "awaiting_option_text";
 
   const builderMessage = ctx.callbackQuery.message;
-  if (builderMessage) {
-    const poll = ctx.session.poll as Record<string, unknown>;
+  const poll = ctx.session.poll;
+  if (builderMessage && poll) {
     poll.builderMessageId = builderMessage.message_id;
     poll.builderChatId = builderMessage.chat.id;
   }
@@ -144,7 +142,7 @@ composer.callbackQuery("option:done", async (ctx) => {
   const poll = ctx.session.poll;
   if (!poll?.question) return;
 
-  const options = (poll.options ?? []) as string[];
+  const options = poll.options ?? [];
   if (options.length < 2) {
     await ctx.answerCallbackQuery({ text: "Need at least 2 options.", show_alert: true });
     return;
@@ -153,16 +151,16 @@ composer.callbackQuery("option:done", async (ctx) => {
   await ctx.answerCallbackQuery();
 
   const anonymous = poll.anonymous ?? true;
-  const type = anonymous ? "Anonymous" : "Public";
-  let summary = "<b>\u2705 Poll created!</b>\n\n";
-  summary += `<b>Question:</b> ${escapeHtml(poll.question)}\n`;
-  summary += `<b>Type:</b> ${type}\n\n`;
-  summary += "<b>Options:</b>\n";
-  for (let i = 0; i < options.length; i++) {
-    summary += `  ${i + 1}. ${escapeHtml(options[i])}\n`;
+  const chatId = ctx.callbackQuery.message?.chat.id;
+  if (!chatId) {
+    await ctx.answerCallbackQuery({ text: "Action no longer available", show_alert: true });
+    return;
   }
 
-  await ctx.editMessageText(summary, { parse_mode: "HTML" });
+  await ctx.api.sendPoll(chatId, poll.question, options, {
+    is_anonymous: anonymous,
+  });
+  await ctx.editMessageText("Poll posted.");
 
   ctx.session.step = undefined;
   ctx.session.poll = undefined;
@@ -172,13 +170,13 @@ composer.callbackQuery("option:anon", async (ctx) => {
   await ctx.answerCallbackQuery();
 
   const poll = ctx.session.poll;
-  if (!poll) return;
+  if (!poll?.question) return;
 
   poll.anonymous = !(poll.anonymous ?? true);
 
-  const options = (poll.options ?? []) as string[];
+  const options = poll.options ?? [];
   await ctx.editMessageText(
-    buildOptionsText(poll.question!, options, poll.anonymous),
+    buildOptionsText(poll.question, options, poll.anonymous),
     {
       parse_mode: "HTML",
       reply_markup: buildOptionsKeyboard(options, poll.anonymous),

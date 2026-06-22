@@ -4,9 +4,9 @@ import { inlineKeyboard, inlineButton } from "../toolkit/index.js";
 
 const composer = new Composer<Ctx>();
 
-const WELCOME = `Welcome to AGNTDEV Bot!
+const WELCOME = `Welcome to FlowQualityQABot!
 
-Use the menu below to get started.`;
+Create quick team polls with buttons.`;
 
 composer.command("start", async (ctx) => {
   await ctx.reply(WELCOME, {
@@ -20,14 +20,14 @@ composer.command("start", async (ctx) => {
 composer.callbackQuery("menu:about", async (ctx) => {
   await ctx.answerCallbackQuery();
   await ctx.editMessageText(
-    "AGNTDEV Bot — a Telegram bot built with the grammY framework.",
+    "FlowQualityQABot helps teams create quick Telegram polls and collect votes.",
   );
 });
 
 composer.callbackQuery("menu:help", async (ctx) => {
   await ctx.answerCallbackQuery();
   await ctx.editMessageText(
-    "Use the buttons below to navigate. Send /start to return to the main menu.",
+    "Use Create poll to start a poll. Send /start to return to the main menu.",
   );
 });
 

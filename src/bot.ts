@@ -11,6 +11,8 @@ export interface Session {
     question?: string;
     options?: string[];
     anonymous?: boolean;
+    builderMessageId?: number;
+    builderChatId?: number;
   };
 }
 

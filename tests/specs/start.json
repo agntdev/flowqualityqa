@@ -8,7 +8,7 @@
           {
             "method": "sendMessage",
             "payload": {
-              "text": "Welcome to AGNTDEV Bot!\n\nUse the menu below to get started.",
+              "text": "Welcome to FlowQualityQABot!\n\nCreate quick team polls with buttons.",
               "reply_markup": {
                 "inline_keyboard": [
                   [
