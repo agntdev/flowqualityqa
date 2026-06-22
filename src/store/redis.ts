@@ -56,3 +56,8 @@ export function getInMemoryClient(): InMemoryRedis {
   }
   return inMemoryClient;
 }
+
+export function clearInMemoryClient(): void {
+  const client = getInMemoryClient();
+  client.clear();
+}
