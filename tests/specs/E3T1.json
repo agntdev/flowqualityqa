@@ -70,7 +70,8 @@
               "text": "\u2705 Poll posted!",
               "reply_markup": {
                 "inline_keyboard": [
-                  [{ "text": "Close poll", "callback_data": "poll:close:1:1014:poll_1_1014" }]
+                  [{ "text": "Close poll", "callback_data": "poll:close:1:1014:poll_1_1014" }],
+                  [{ "text": "Export", "callback_data": "poll:export:poll_1_1014" }]
                 ]
               }
             }
@@ -88,7 +89,8 @@
               "text": "\u2705 Poll closed.",
               "reply_markup": {
                 "inline_keyboard": [
-                  [{ "text": "\ud83d\udcca Results", "callback_data": "poll:results:poll_1_1014" }]
+                  [{ "text": "\ud83d\udcca Results", "callback_data": "poll:results:poll_1_1014" }],
+                  [{ "text": "Export", "callback_data": "poll:export:poll_1_1014" }]
                 ]
               }
             }
@@ -168,7 +170,8 @@
               "text": "\u2705 Poll posted!",
               "reply_markup": {
                 "inline_keyboard": [
-                  [{ "text": "Close poll", "callback_data": "poll:close:1:1014:poll_1_1014" }]
+                  [{ "text": "Close poll", "callback_data": "poll:close:1:1014:poll_1_1014" }],
+                  [{ "text": "Export", "callback_data": "poll:export:poll_1_1014" }]
                 ]
               }
             }
@@ -254,7 +257,8 @@
               "text": "\u2705 Poll posted!",
               "reply_markup": {
                 "inline_keyboard": [
-                  [{ "text": "Close poll", "callback_data": "poll:close:1:1014:poll_1_1014" }]
+                  [{ "text": "Close poll", "callback_data": "poll:close:1:1014:poll_1_1014" }],
+                  [{ "text": "Export", "callback_data": "poll:export:poll_1_1014" }]
                 ]
               }
             }
@@ -272,7 +276,8 @@
               "text": "\u2705 Poll closed.",
               "reply_markup": {
                 "inline_keyboard": [
-                  [{ "text": "\ud83d\udcca Results", "callback_data": "poll:results:poll_1_1014" }]
+                  [{ "text": "\ud83d\udcca Results", "callback_data": "poll:results:poll_1_1014" }],
+                  [{ "text": "Export", "callback_data": "poll:export:poll_1_1014" }]
                 ]
               }
             }

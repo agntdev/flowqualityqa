@@ -89,6 +89,7 @@ composer.callbackQuery(/^poll:close:/, async (ctx) => {
       {
         reply_markup: inlineKeyboard([
           [inlineButton("\u{1F4CA} Results", `poll:results:${pollId}`)],
+          [inlineButton("Export", `poll:export:${pollId}`)],
         ]),
       },
     );
